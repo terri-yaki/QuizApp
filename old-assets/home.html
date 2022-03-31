@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>QuizApp</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-colors-flat.css">
+    <link rel="icon" href="/QuizApp/res/quizapp_favicon.png">
+
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            font-family: "Poppins", sans-serif
+        }
+
+        body {
+            font-size: 16px;
+        }
+
+        .w3-half img {
+            margin-bottom: -6px;
+            margin-top: 16px;
+            opacity: 0.8;
+            cursor: pointer
+        }
+
+        .w3-half img:hover {
+            opacity: 1
+        }
+
+        .circle {
+            background-color: rgb(212, 212, 212);
+            height: 5000px;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+            width: 5000px;
+            background-attachment: fixed;
+        }
+
+        .sidenav {
+            height: 100%;
+            /* 100% Full-height */
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            overflow-x: hidden;
+            /* Disable horizontal scroll */
+            padding-top: 60px;
+            transition: 0.5s;
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <!-- Sidebar/menu -->
+    <nav class=" w3-sidebar w3-blue w3-collapse w3-top w3-large w3-padding sidenav"
+        style="z-index:3;width:300px;font-weight:bold;" id="mySidebar">
+        <div class="w3-container">
+            <h3 class="w3-padding-64"><b>
+
+                    <div>
+                        <center><img src="/QuizApp/res/quizapp_logo_2.png" width="200" height="200"></center>
+                    </div>
+                </b></h3>
+        </div>
+        <div class="w3-bar-block">
+            <a href="#" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a>
+            <a href="#Sign up" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Sign Up</a>
+            <a href="#Leaderboard" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Login</a>
+            <a href="#designers" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Leaderboard</a>
+            <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Top menu on small screens -->
+    <header class="w3-container w3-top w3-hide-large w3-blue w3-xlarge w3-padding">
+        <a href="javascript:void(0)" class="w3-button w3-blue w3-margin-right" onclick="w3_open()">☰</a>
+        <span>QuizApp</span>
+    </header>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+        id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+        <!-- Header -->
+        <div class="w3-container" style="margin-top:80px" id="aboutUs">
+            <h1 class="w3-jumbo" style="color:#2c3e50"><b>QuizApp, your daily revision destination.</b></h1><br>
+            <h1 class="w3-xxxlarge w3-text-blue"><b>What do we do?</b></h1>
+            <hr style="width:50px;border:5px solid #47b6ff" class="w3-round"><br>
+        </div>
+
+        <!-- Photo grid (modal) -->
+        <div class="w3-row-padding">
+            <img src="/QuizApp/res/home_aboutus.png" style="width:100%"><br><br>
+            <p>Our app is aimed towards people that are at university wanting to have a daily way to help
+                with revision. Revision styles have changed rapidly over the recent few years as studying online and
+                from
+                home has become a lot more popular due to the Coronavirus pandemic, which started at the start of 2020
+                [1]. During this period when people were trapped inside due to isolation restrictions, people would use
+                online software to study. This principle is why we wanted to create an app to be able to help people do
+                quick revision with little quizzes on different topics/themes. We also hope with this web application to
+                create a learning community that helps promote stress free and easy revision or learning.
+            </p>
+        </div>
+
+        <!-- Modal for full size images on click-->
+        <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+            <span class="w3-button w3-black w3-xxlarge w3-display-topright">×</span>
+            <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+                <img id="img01" class="w3-image">
+                <p id="caption"></p>
+            </div>
+        </div>
+
+        <!-- Quiz -->
+        <div class="w3-container" id="services" style="margin-top:75px">
+            <h1 class="w3-xxxlarge w3-text-blue"><b>Quizzes.</b></h1>
+            <hr style="width:50px;border:5px solid #47b6ff" class="w3-round"><br>
+            <div class="w3-row-padding">
+                <img src="/QuizApp/res/home_quiz.png" style="width:100%"><br><br>
+                <p>We have over hundreds of quizzes waiting for you to solve!</p>
+                <p>We provide tons of quizzes on all Computer science topics, such as Linux, Networking, Programming
+                    (PHP,
+                    JS, Python and etc.) and lots more! We have a large database of numerous questions that you could
+                    use to
+                    test your own or your team's knowledge while having fun.
+                </p>
+            </div>
+        </div>
+
+        <!-- Designers -->
+        <div class="w3-container" id="designers" style="margin-top:75px">
+            <h1 class="w3-xxxlarge w3-text-blue"><b>Leaderboard.</b></h1>
+            <hr style="width:50px;border:5px solid #47b6ff" class="w3-round">
+            <p>The best team in the world.</p>
+            <p>We are lorem ipsum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+                magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                commodo consequat. Duis aute irure
+                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+                consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat.
+            </p>
+            <p><b>Our designers are thoughtfully chosen</b>:</p>
+        </div>
+
+        <!-- The Team -->
+        <div class="w3-row-padding w3-grayscale">
+            <div class="w3-col m4 w3-margin-bottom">
+                <div class="w3-light-grey">
+                    <img src="/w3images/team2.jpg" alt="John" style="width:100%">
+                    <div class="w3-container">
+                        <h3>John Doe</h3>
+                        <p class="w3-opacity">CEO & Founder</p>
+                        <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                            elementum.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col m4 w3-margin-bottom">
+                <div class="w3-light-grey">
+                    <img src="/w3images/team1.jpg" alt="Jane" style="width:100%">
+                    <div class="w3-container">
+                        <h3>Jane Doe</h3>
+                        <p class="w3-opacity">Designer</p>
+                        <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                            elementum.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-col m4 w3-margin-bottom">
+                <div class="w3-light-grey">
+                    <img src="/w3images/team3.jpg" alt="Mike" style="width:100%">
+                    <div class="w3-container">
+                        <h3>Mike Ross</h3>
+                        <p class="w3-opacity">Architect</p>
+                        <p>Phasellus eget enim eu lectus faucibus vestibulum. Suspendisse sodales pellentesque
+                            elementum.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="w3-container" id="contact" style="margin-top:75px">
+            <h1 class="w3-xxxlarge w3-text-blue"><b>Contact.</b></h1>
+            <hr style="width:50px;border:5px solid #47b6ff" class="w3-round">
+            <p>Having some issue? Let us know!</p>
+            <form action="/action_page.php" target="_blank">
+                <div class="w3-section">
+                    <label>Name</label>
+                    <input class="w3-input w3-border" type="text" name="Name" required>
+                </div>
+                <div class="w3-section">
+                    <label>Email</label>
+                    <input class="w3-input w3-border" type="text" name="Email" required>
+                </div>
+                <div class="w3-section">
+                    <label>Message</label>
+                    <input class="w3-input w3-border" type="text" name="Message" required>
+                </div>
+                <button type="submit" class="w3-button w3-block w3-padding-large w3-blue w3-margin-bottom">Send
+                    Message</button>
+
+
+            </form>
+
+        </div>
+        <!-- End page content -->
+    </div>
+
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // Modal Image Gallery
+        function onClick(element) {
+            document.getElementById("img01").src = element.src;
+            document.getElementById("modal01").style.display = "block";
+            var captionText = document.getElementById("caption");
+            captionText.innerHTML = element.alt;
+        }
+    </script>
+
+</body>
+
+</html>
