@@ -27,7 +27,6 @@ const TwitterStream = () => {
                     setTweets(tweets => tweets.concat(t));
                     tweetIDs.push(t.id);
                 }
-
             });
         });
     }
