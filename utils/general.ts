@@ -21,3 +21,13 @@ export function nullToUndefined<T>(data: T): T | undefined{
         return data;
     }
 }
+
+export function removePrivates(thing: any) {
+    for (let [key, value] of Object.entries(thing)){
+        if (key.startsWith("_")){
+            delete thing[key];
+        } else if (value instanceof Object) {
+            removePrivates(thing[key]);
+        }
+    }
+}

@@ -5,11 +5,17 @@ import APIError, * as error from '../../../utils/error/APIError';
 import ErrorType from '../../../utils/error/ErrorType';
 import MQuiz from '../../../utils/models/MQuiz';
 import { connect } from '../../../utils/connection';
+import { inspect } from 'util';
+import { removePrivates } from '../../../utils/general';
 
 
 const allowedTopics = [
+    "general",
     "linux",
-    "networking"
+    "code",
+    "devops",
+    "cms",
+    "sql",
 ];
 
 const mQuiz = new MQuiz();

@@ -6,7 +6,14 @@ import {IQuizQuestion} from './structs/QuizQuestion.js';
 const token = envVar("QUIZAPI_TOKEN");
 
 async function getQuizData(topic: string){
-    let response = await axios.get(`https://quizapi.io/api/v1/questions/?apiKey=${token}&limit=10&category=${encodeURIComponent(topic)}`);
+    let response = await axios({
+        url: "https://quizapi.io/api/v1/questions/",
+        params: {
+            apiKey: token,
+            limit: 10,
+            category: topic!=="general"?topic:undefined //Ignore the topic if it is "general".
+        }
+    })
     if (response.status === 200) {
         return response.data;
     } else {
