@@ -9,10 +9,5 @@ export default class APIError {
     constructor(type: ErrorType, message: string){
         this.type = type;
         this.message = message;
-    }
-    
+    }   
 }
-
-
-
-

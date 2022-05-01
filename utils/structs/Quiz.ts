@@ -1,5 +1,4 @@
 import {Schema} from "mongoose";
-import { stringify } from "querystring";
 import { IQuizQuestion } from "./QuizQuestion";
 
 interface IQuizBase {

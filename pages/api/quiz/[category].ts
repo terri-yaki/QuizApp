@@ -1,12 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {IQuiz} from "../../../utils/structs/Quiz";
-import APIError, * as error from '../../../utils/error/APIError';
+import APIError from '../../../utils/error/APIError';
 import ErrorType from '../../../utils/error/ErrorType';
 import MQuiz from '../../../utils/models/MQuiz';
 import { connect } from '../../../utils/connection';
-import { inspect } from 'util';
-import { removePrivates } from '../../../utils/general';
 
 
 const allowedTopics = [
@@ -42,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             ));
         }
     } else {
-        res.status(400).end(new APIError(
+        res.status(400).json(new APIError(
             ErrorType.Invalid_Method,
             "The method you used is not valid for this."
         ));

@@ -58,6 +58,13 @@ class MQuiz {
 
     }
 
+    
+    /**
+     * Gets a quiz from the database, using the data and topic.
+     * @param date The date of the quiz, rounded to midnight UTC.
+     * @param topic The topic of the quiz.
+     * @returns The quiz, if it was found.
+     */
     public async loadQuizFromDB(date: Date, topic: string):Promise<IQuiz | null> {
         let quiz = await this.quizModel.findOne({
             date,
@@ -72,7 +79,16 @@ class MQuiz {
         }
     }
 
+
+    
+    /**
+     * Generates or loads a new quiz for today. If you are reading this, remind Dom to fix the concurrency bug.
+     * @param topic The topic of the quiz to find/generate.
+     * @returns Today's quiz.
+     */
     public async getTodaysQuiz(topic: string): Promise<IQuiz> { //Gets today's quiz from either the database or QuizAPI.
+        //TODO: FIX A CONCURRENCY ERROR HERE WHERE generateNewQuiz CAN BE CALLED TWICE IN SHORT SUCCESSION...
+        //... BECAUSE THE SECOND REQUEST MAY OCCUR BEFORE THE FIRST IS COMPLETED.
         let today = currentDay();
         let dbQuiz = await this.loadQuizFromDB(today, topic);
         if (dbQuiz !== null){ //Return the quiz if found.
