@@ -8,6 +8,7 @@ export function validateDisplayName(displayName: any): boolean{
 }
 
 /**
+ * TODO: FIX THIS BECAUSE IT DOESN'T WORK PROPERLY.
  * Checks if a password satisifes the requirements to be secure.
  * @param passwd The password to check.
  * @returns Whether the password is sufficient.

@@ -8,13 +8,23 @@ export interface IUser {
     displayName: string,
 }
 
+export type Session = {
+    token: string,
+    expiry: Date
+}
+
+export interface IUserSession extends IUser {
+    session: Session
+}
+
 export interface IUserUnsafe{
     email: string,
     displayName: string,
     passwordHash: string,
+    activeSessions: Session[]
 }
 
-export type IUserUnsafeWithID = IUserUnsafe & {_id: mongoose.Types.ObjectId};
+export type UserDocument = IUserUnsafe & {_id: mongoose.Types.ObjectId} & mongoose.Document<unknown, any, IUserUnsafe>;
 
 export function getUserSchema(){
     return new Schema({
@@ -23,14 +33,18 @@ export function getUserSchema(){
             unique: true
         },
         displayName: String,
-        passwordHash: String
+        passwordHash: String,
+        activeSessions: [{
+            token: String,
+            expiry: Date
+        }]
     });
 }
 /**
  * Strips out highly sensitive data (related to passwords and tokens).
  * @param user IUserUnsafe
  */
-export function toUser(user: IUserUnsafeWithID): IUser {
+export function toUser(user: UserDocument): IUser {
     return {
         uuid: user._id.toString(),
         email: user.email,
