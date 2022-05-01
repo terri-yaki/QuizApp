@@ -15,7 +15,7 @@ class MUser {
 
     constructor() {
         this.userSchema = getUserSchema();
-        if (typeof model !== undefined){
+        if (typeof model === "undefined"){
             model = mongoose.model<IUserUnsafe>("User", this.userSchema);
         }
     }
@@ -60,7 +60,7 @@ class MUser {
      * @param password The user's password
      * @returns A promise for UserSession or a UserError enum, depending if the opration was successful or not. If there is a serious error (a database problem), then the promise will be rejected.
      */
-    public async createNewUser(email: any, displayName: any, password: any): Promise<IUserSession | UserError> {
+    public async createNewUser(email: string, displayName: string, password: string): Promise<IUserSession | UserError> {
         if (!validateEmail(email)) {
             return UserError.Invalid_Email;
         } else if (!validateDisplayName) {
@@ -92,7 +92,7 @@ class MUser {
      * @param email 
      * @param password 
      */
-    public async userLogin(email: any, password: any): Promise<IUserSession | UserError> {
+    public async userLogin(email: string, password: string): Promise<IUserSession | UserError> {
         if (typeof email !== "string"){
             return UserError.Invalid_Email;
         } else if (typeof password !== "string") {

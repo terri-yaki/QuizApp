@@ -5,26 +5,42 @@ import {IQuizQuestion, getQuizQuestionSchema} from "../structs/QuizQuestion";
 import * as quizapi from "../quizapi";
 import {currentDay} from "../general";
 
+const allowedTopics = [
+    "general",
+    "linux",
+    "code",
+    "devops",
+    "cms",
+    "sql",
+];
+
+
+let quizModel: mongoose.Model<IQuizDB>;
+let questionModel: mongoose.Model<IQuizQuestion>;
+let quizAPILock:Map<String, Promise<IQuiz>> = new Map(); //Lock to prevent double access of QuizAPI. This technically doesn't solve the concurrency bug entirely, but makes it unlikely to happen.
 
 class MQuiz {
     private quizSchema:Schema;
     private questionSchema:Schema;
-    private quizModel;
-    private questionModel;
 
     constructor() {
         this.quizSchema = getQuizSchema();
         this.questionSchema = getQuizQuestionSchema();
-        this.quizModel = mongoose.model<IQuizDB>("Quiz", this.quizSchema);
-        this.questionModel = mongoose.model<IQuizQuestion>("QuizQuestion", this.questionSchema);
+
+        if (typeof quizModel === "undefined"){
+            quizModel = mongoose.model<IQuizDB>("Quiz", this.quizSchema);
+        }
+        if (typeof questionModel === "undefined"){
+            questionModel = mongoose.model<IQuizQuestion>("QuizQuestion", this.questionSchema);
+        }
     }
 
     private async saveQuestions(questions: IQuizQuestion[]){
         let qDocs = [];
         for (let q of questions){
-            qDocs.push(new this.questionModel(q));
+            qDocs.push(new questionModel(q));
         }
-        return await this.questionModel.bulkSave(qDocs);
+        return await questionModel.bulkSave(qDocs);
     }
 
     private async generateNewQuiz(topic: string): Promise<IQuiz>{
@@ -38,13 +54,8 @@ class MQuiz {
         for (let id of qDBData.getInsertedIds()) {
             oids.push(id["_id"]);
         }
-        console.log({
-            date,
-            topic,
-            questions: oids
-        });
 
-        await (new this.quizModel({
+        await (new quizModel({
             date,
             topic,
             questions: oids
@@ -66,7 +77,7 @@ class MQuiz {
      * @returns The quiz, if it was found.
      */
     public async loadQuizFromDB(date: Date, topic: string):Promise<IQuiz | null> {
-        let quiz = await this.quizModel.findOne({
+        let quiz = await quizModel.findOne({
             date,
             topic
         });
@@ -82,19 +93,30 @@ class MQuiz {
 
     
     /**
-     * Generates or loads a new quiz for today. If you are reading this, remind Dom to fix the concurrency bug.
+     * Generates or loads a new quiz for today.
      * @param topic The topic of the quiz to find/generate.
-     * @returns Today's quiz.
+     * @returns Today's quiz, or null if the category was invalid.
      */
-    public async getTodaysQuiz(topic: string): Promise<IQuiz> { //Gets today's quiz from either the database or QuizAPI.
-        //TODO: FIX A CONCURRENCY ERROR HERE WHERE generateNewQuiz CAN BE CALLED TWICE IN SHORT SUCCESSION...
-        //... BECAUSE THE SECOND REQUEST MAY OCCUR BEFORE THE FIRST IS COMPLETED.
+    public async getTodaysQuiz(topic: string): Promise<IQuiz | null> { //Gets today's quiz from either the database or QuizAPI.
+        if (typeof topic !== "string" || allowedTopics.indexOf(topic) < 0) {
+            return null;
+        }
+
         let today = currentDay();
         let dbQuiz = await this.loadQuizFromDB(today, topic);
         if (dbQuiz !== null){ //Return the quiz if found.
             return dbQuiz;
         } else {
-            return await this.generateNewQuiz(topic);
+            let quiz:IQuiz;
+            if (quizAPILock.has(topic)) {
+                quiz = await (quizAPILock.get(topic) as Promise<IQuiz>);
+            } else {
+                let quizPromise = this.generateNewQuiz(topic)
+                quizAPILock.set(topic, quizPromise); //Add lock
+                quiz = await quizPromise;
+                quizAPILock.delete(topic); //Remove lock
+            }
+            return quiz;
         }
     }
 }

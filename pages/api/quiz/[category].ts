@@ -7,14 +7,7 @@ import MQuiz from '../../../utils/models/MQuiz';
 import { connect } from '../../../utils/connection';
 
 
-const allowedTopics = [
-    "general",
-    "linux",
-    "code",
-    "devops",
-    "cms",
-    "sql",
-];
+
 
 const mQuiz = new MQuiz();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<IQuiz | APIError>) {
@@ -23,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (req.method === "GET") {
         try {
             const category = req.query.category as string;
-            if (allowedTopics.indexOf(category) > -1) {
-                let quiz = await mQuiz.getTodaysQuiz(category);
+            let quiz = await mQuiz.getTodaysQuiz(category);
+            if (quiz) {
                 res.status(200).json(quiz);
             } else {
                 res.status(400).json(new APIError(
@@ -33,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 ));
             }
         } catch (e) {
-            console.log(e);
+            console.log("Internal Server Error: ", e);
             res.status(500).json(new APIError(
                 ErrorType.Server_Error,
                 "An internal server error occurred."
