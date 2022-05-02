@@ -13,6 +13,8 @@ export type Session = {
     expiry: Date
 }
 
+export type SessionDocument = Session & mongoose.Types.Subdocument<mongoose.Types.ObjectId>; //TODO: figure out the actual correct type because this is wrong.
+
 export interface IUserSession extends IUser {
     session: Session
 }
@@ -21,7 +23,7 @@ export interface IUserUnsafe{
     email: string,
     displayName: string,
     passwordHash: string,
-    activeSessions: Session[]
+    activeSessions: mongoose.Types.DocumentArray<Session>
 }
 
 export type UserDocument = IUserUnsafe & {_id: mongoose.Types.ObjectId} & mongoose.Document<unknown, any, IUserUnsafe>;

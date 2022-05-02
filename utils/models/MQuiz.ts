@@ -15,32 +15,37 @@ const allowedTopics = [
 ];
 
 
-let quizModel: mongoose.Model<IQuizDB>;
-let questionModel: mongoose.Model<IQuizQuestion>;
+
 let quizAPILock:Map<String, Promise<IQuiz>> = new Map(); //Lock to prevent double access of QuizAPI. This technically doesn't solve the concurrency bug entirely, but makes it unlikely to happen.
 
 class MQuiz {
     private quizSchema:Schema;
     private questionSchema:Schema;
+    private quizModel: mongoose.Model<IQuizDB>;
+    private questionModel: mongoose.Model<IQuizQuestion>;
 
     constructor() {
         this.quizSchema = getQuizSchema();
         this.questionSchema = getQuizQuestionSchema();
 
-        if (typeof quizModel === "undefined"){
-            quizModel = mongoose.model<IQuizDB>("Quiz", this.quizSchema);
+        if (Object.hasOwn(mongoose.models, "Quiz")) {
+            this.quizModel = mongoose.models["User"];
+        } else {
+            this.quizModel = mongoose.model<IQuizDB>("Quiz", this.quizSchema);
         }
-        if (typeof questionModel === "undefined"){
-            questionModel = mongoose.model<IQuizQuestion>("QuizQuestion", this.questionSchema);
+        if (Object.hasOwn(mongoose.models, "QuizQuestion")) {
+            this.questionModel = mongoose.models["QuizQuestion"];
+        } else {
+            this.questionModel = mongoose.model<IQuizQuestion>("QuizQuestion", this.questionSchema);
         }
     }
 
     private async saveQuestions(questions: IQuizQuestion[]){
         let qDocs = [];
         for (let q of questions){
-            qDocs.push(new questionModel(q));
+            qDocs.push(new this.questionModel(q));
         }
-        return await questionModel.bulkSave(qDocs);
+        return await this.questionModel.bulkSave(qDocs);
     }
 
     private async generateNewQuiz(topic: string): Promise<IQuiz>{
@@ -55,7 +60,7 @@ class MQuiz {
             oids.push(id["_id"]);
         }
 
-        await (new quizModel({
+        await (new this.quizModel({
             date,
             topic,
             questions: oids
@@ -77,7 +82,7 @@ class MQuiz {
      * @returns The quiz, if it was found.
      */
     public async loadQuizFromDB(date: Date, topic: string):Promise<IQuiz | null> {
-        let quiz = await quizModel.findOne({
+        let quiz = await this.quizModel.findOne({
             date,
             topic
         });

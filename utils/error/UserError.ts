@@ -1,3 +1,7 @@
+import { NextApiResponse } from "next";
+import APIError from "./APIError";
+import ErrorType from "./ErrorType";
+
 /**
  * Types of user error.
  * IMPORTANT: Remember to update other functions in this class when you modify this enum!!!!!
@@ -6,7 +10,9 @@ export enum UserError {
     Invalid_Display_Name,
     Invalid_Email,
     Invalid_Password,
-    Authentication_Failure,
+    Invalid_UUID,
+    Incorrect_Password,
+    Invalid_Token,
     User_Already_Exists,
     User_Does_Not_Exist
 }
@@ -19,7 +25,9 @@ export function getStatusCode(err: UserError): number {
             return 400;
         case UserError.User_Already_Exists:
             return 409;
-        case UserError.Authentication_Failure:
+        case UserError.Incorrect_Password:
+            return 401;
+        case UserError.Invalid_Token:
             return 401;
         case UserError.User_Does_Not_Exist:
             return 404;
@@ -38,8 +46,10 @@ export function getErrorMessage(err: UserError): string {
         case UserError.Invalid_Password:
             return "The password does not meet the requirements.";
         case UserError.User_Already_Exists:
-            return "A user is already registered with this email address."
-        case UserError.Authentication_Failure:
+            return "A user is already registered with this email address.";
+        case UserError.Invalid_Token:
+            return "The session token is invalid.";
+        case UserError.Incorrect_Password:
             return "This username and password combination is incorrect.";
         case UserError.User_Does_Not_Exist:
             return "This user does not exist.";
@@ -47,4 +57,25 @@ export function getErrorMessage(err: UserError): string {
             return "An unknown user error occurred.";
 
     }
+}
+
+export async function handleUserResponse<T>(prom: Promise<T | UserError>, res: NextApiResponse<T | APIError>){
+    try {
+        let result = await prom;
+        if (typeof result === "number") {
+            res.status(getStatusCode(result)).json(new APIError(
+                ErrorType.User_Error,
+                getErrorMessage(result)
+            ));
+        } else {
+            res.status(200).json(result);
+        }
+    } catch (e){
+        console.error("An internal server error occurred:", e);
+        res.status(500).json(new APIError(
+            ErrorType.Server_Error,
+            "An internal server error occurred."
+        ));
+    }
+    res.end();
 }

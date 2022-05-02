@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import * as bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-import { getUserSchema, IUser, IUserSession, IUserUnsafe, toUser, UserDocument, Session } from "../structs/User";
+import { getUserSchema, IUser, IUserSession, IUserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
 import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
 
@@ -9,25 +9,40 @@ import { UserError } from "../error/UserError";
 const SALT_ROUNDS = 10;
 const TOKEN_DURATION = 24*60*60*1000;
 
-let model: mongoose.Model<IUserUnsafe>;
+//Just to let you know, the UUIDs in this aren't actually in UUID format anymore because Mongoose Object IDs are better.
+
 class MUser {
     private userSchema;
-
+    private userModel;
+    /**
+     * Inistantiates the user model.
+     */
     constructor() {
-        this.userSchema = getUserSchema();
-        if (typeof model === "undefined"){
-            model = mongoose.model<IUserUnsafe>("User", this.userSchema);
+    this.userSchema = getUserSchema();
+        if (Object.hasOwn(mongoose.models, "User")){
+            this.userModel = mongoose.models["User"];
+        } else {
+            this.userModel = mongoose.model<IUserUnsafe>("User", this.userSchema);
         }
     }
+
 
     /**
      * Attempts to search for the given UUID in the database and return the user.
      * @param uuid The UUID of the user to search for.
      * @returns Either the user if found, or null (in this case you should 404).
+     * TODO: Make a safe version of this function.
      */
-    public async getUserByUUID(uuid: string): Promise<UserDocument | null> {
-        let instance = await model.findOne({
-            uuid
+    private async getUserDocByUUID(uuid: string): Promise<UserDocument | null> {
+        let oid;
+        try {
+            oid = mongoose.Types.ObjectId.createFromHexString(uuid);
+        } catch (e){
+            return null;
+        }
+
+        let instance = await this.userModel.findOne({
+            _id: oid
         });
 
         if (instance) {
@@ -42,8 +57,8 @@ class MUser {
      * @param email The email address to search for.
      * @returns The user if found, otherwise null.
      */
-    public async getUserByEmail(email: string): Promise<UserDocument | null> {
-        let instance = await model.findOne({
+    private async getUserDocByEmail(email: string): Promise<UserDocument | null> {
+        let instance = await this.userModel.findOne({
             email
         });
 
@@ -67,14 +82,14 @@ class MUser {
             return UserError.Invalid_Display_Name;
         } else if (!validatePassword) {
             return UserError.Invalid_Password;
-        } else if (await this.getUserByEmail(email)) {
+        } else if (await this.getUserDocByEmail(email)) {
             return UserError.User_Already_Exists;
         }
 
         let passwordSalt = await bcrypt.genSalt(10);
         let passwordHash = await bcrypt.hash(password, passwordSalt);
 
-        let instance = new model({
+        let instance = new this.userModel({
             email,
             displayName,
             passwordHash,
@@ -99,19 +114,18 @@ class MUser {
             return UserError.Invalid_Password;
         }
 
-        let user = await this.getUserByEmail(email);
+        let user = await this.getUserDocByEmail(email);
 
        if (user) {
            if (await bcrypt.compare(password, user.passwordHash)){
                return await this.createUserSession(user);
            } else {
-               return UserError.Authentication_Failure;
+               return UserError.Invalid_Password;
            }
        } else {
-           return UserError.Authentication_Failure;
+           return UserError.Invalid_Password;
        } 
     }
-
     
     /**
      * Private method to create a session for a user.
@@ -132,6 +146,48 @@ class MUser {
         userSession.session = session;
 
         return userSession;
+    }
+
+    /**
+     * Checks if a user's session is valid.
+     * @param userDoc The user document to validate.
+     * @param token The token to check
+     * @returns 
+     */
+    private validateSession(userDoc: UserDocument, token: string): SessionDocument | null {
+        for (let session of userDoc.activeSessions) {
+            if (session.token === token && session.expiry.getTime() > Date.now()) {
+                return session; //Return the session if it is valid.
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Logs a suer out of their session. Does not revoke other sessions.
+     * @param uuid The ID of the user.
+     * @param token The token to be revoked.
+     * @returns True if successful, otherwise a UserError.
+     */
+    public async userLogout(uuid: string, token: string): Promise<true | UserError> {
+        //TODO: Prune expired tokens as well.
+        if (typeof uuid !== "string") {
+            return UserError.Invalid_UUID;
+        }
+
+        let userDoc = await this.getUserDocByUUID(uuid);
+        if (userDoc) {
+            let session = this.validateSession(userDoc, token);
+            if (session){
+                session.remove();
+                await userDoc.save();
+                return true;
+            } else { //Invalid session
+                return UserError.Invalid_Token;
+            } 
+        } else { //User not found.
+            return UserError.User_Does_Not_Exist;
+        }
     }
 }
 
