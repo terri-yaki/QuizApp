@@ -77,6 +77,7 @@ const processTweet = async (tweet: TweetV2SingleStreamResult, count: number) => 
     let author_data = await getUserData(author_id);
     let profile_image_url: string = author_data.url;
     let author_name: string = author_data.name;
+    let username: string = author_data.username;
     let id: string = tweet.data.id;
 
     if (profile_image_url == null) {
@@ -95,6 +96,7 @@ const processTweet = async (tweet: TweetV2SingleStreamResult, count: number) => 
         id: id,
         author: author_id,
         name: author_name,
+        username: username,
         image: profile_image_url,
         tweet: text,
     });
@@ -111,9 +113,10 @@ const processTweet = async (tweet: TweetV2SingleStreamResult, count: number) => 
 
 // Grabs any other data needed from the Twitter API
 const getUserData = async (author_id: string) => {
-    let author = await client.v2.user(author_id, { 'user.fields': ['profile_image_url'] });
+    let author = await client.v2.user(author_id, { 'user.fields': ['profile_image_url', 'username'] });
     let profile_image_url = author.data.profile_image_url;
     let author_name = author.data.name;
+    let username = author.data.username;
 
     if (profile_image_url == null) {
         throw new Error;
@@ -126,6 +129,7 @@ const getUserData = async (author_id: string) => {
     return {
         url: profile_image_url,
         name: author_name,
+        username: username,
     };
 }
 

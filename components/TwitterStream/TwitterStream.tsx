@@ -20,14 +20,16 @@ const TwitterStream = () => {
         });
 
         socket.on('client:twitter', (msg) => {
-            msg.tweets.forEach((tweet: string) => {
-                let t: ITweetData = JSON.parse(tweet);
+            if (msg !== undefined) {
+                msg.tweets.forEach((tweet: string) => {
+                    let t: ITweetData = JSON.parse(tweet);
 
-                if (!tweetIDs.includes(t.id)) {
-                    setTweets(tweets => tweets.concat(t));
-                    tweetIDs.push(t.id);
-                }
-            });
+                    if (!tweetIDs.includes(t.id)) {
+                        setTweets(tweets => tweets.concat(t));
+                        tweetIDs.push(t.id);
+                    }
+                });
+            }
         });
     }
 
@@ -45,7 +47,7 @@ const TwitterStream = () => {
         <div id={'twitter-stream'} className={styles.twitter}>
             {
                 tweets.map((t) => {
-                    return <TwitterCard key={t.id} id={t.id} author={t.author} tweet={t.tweet} image={t.image} name={t.name}/>
+                    return <TwitterCard key={t.id} id={t.id} author={t.author} tweet={t.tweet} image={t.image} name={t.name} username={t.username}/>
                 })
             }
         </div>

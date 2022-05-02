@@ -19,7 +19,12 @@ let isTwitterConnected: boolean = false;
 // Should be false in production
 let usingDummyTweets: boolean = true;
 
+// Dev Counter
+// Used for the dummy tweets
+let counter = 0
+
 const TwitterHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+    let tweets : string[];
 
     // Connects to twitter client and sets an interval for collecting tweets
     if (!usingDummyTweets) {
@@ -34,31 +39,45 @@ const TwitterHandler = async (req: NextApiRequest, res: NextApiResponse) => {
                 streamTwitterTweets().catch(error => console.log(error));
             }, 120000);
         }
-    }
 
-    // Retrieve tweets and fills them with dummy tweets if necessary
-    let tweets: string[] = getTweets();
-    if (tweets.length == 0) {
-        console.log('filling with dummy tweet');
+        // Retrieve tweets and fills them with dummy tweets if necessary
+        tweets = getTweets();
 
-        let json = JSON.stringify({
-            id: '444',
-            author: '12345',
-            name: 'John Doe',
-            image: 'http://abc123',
-            tweet: 'tweet text',
-        });
+    } else {
+        if (!isTwitterConnected) {
+            isTwitterConnected = true;
 
-        let json2 = JSON.stringify({
-            id: '445',
-            author: '54321',
-            name: 'John Doe 2',
-            image: 'http://cba321',
-            tweet: 'text tweet',
-        });
+            setInterval(() => {
+                let id1 = counter;
+                counter += 1;
+                let id2 = counter;
+                counter += 1;
 
-        tweets.push(json);
-        tweets.push(json2);
+                // Creating dummy tweets
+                let json = JSON.stringify({
+                    id: id1,
+                    author: '12345',
+                    name: 'John Doe',
+                    username: 'twitter',
+                    image: 'http://abc123',
+                    tweet: 'tweet text',
+                });
+                let json2 = JSON.stringify({
+                    id: id2,
+                    author: '54321',
+                    name: 'John Doe 2',
+                    username: 'twitter',
+                    image: 'http://abc321',
+                    tweet: 'text tweet',
+                });
+
+                // Filling dummy tweets
+                let t: string[] = [];
+                t.push(json);
+                t.push(json2);
+                tweets = t;
+            }, 12000)
+        }
     }
 
     // @ts-ignore
