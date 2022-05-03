@@ -14,6 +14,9 @@ export enum UserError {
     Incorrect_Password,
     Invalid_Token,
     User_Already_Exists,
+    /**
+     * Do not use this for failed login attempts!!!.
+     */
     User_Does_Not_Exist
 }
 

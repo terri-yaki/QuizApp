@@ -1,6 +1,8 @@
 # Quizapp
 Made with 'create-next-app'
 
+## API Endpoint Documentation.
+See [the api directory](/pages/api).
 
 ## Database
 In order to use the database, you must provide a `DATABASE_URL` variable in your `.env.local` file (use 127.0.0.1 instead of localhost).<br>
