@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import {envVar, nullToUndefined} from "./general";
-import {IQuizQuestion} from './structs/QuizQuestion.js';
+import { IQuizQuestion } from './structs/Quiz';
 
 const token = envVar("QUIZAPI_TOKEN");
 
@@ -28,17 +28,21 @@ function dataToQuestions(data: any): IQuizQuestion[] { //This does not check dat
         let {id, question, description, explanation, tip, category, difficulty} = ques;
         let multiAnswers = data.multiple_correct_answers=="true"; //More ==.
         let answers:{
+            id: number,
             name: string,
             correct: boolean
         }[] = [];
 
+        let i = 0;
         for (let ans of Object.entries(ques.answers)) {
             if (ans[1] !== null){
                 answers.push({
+                    id: i,
                     name: ans[1] as string,
                     correct: (ques.correct_answers[ans[0]  + "_correct"] == "true") //Double equals instead of triple deliberate.
                 });
             }
+            i++;
         }
 
         let tags:string[] = [];
@@ -49,7 +53,7 @@ function dataToQuestions(data: any): IQuizQuestion[] { //This does not check dat
         }
 
         let qq: IQuizQuestion = {
-            qaid: id,
+            id,
             question,
             description: nullToUndefined(description as string),
             answers,
