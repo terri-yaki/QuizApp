@@ -1,9 +1,11 @@
 import * as mongoose from "mongoose";
 import * as bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-import { getUserSchema, IUser, IUserSession, IUserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
+import { getUserSchema, User, UserSession, UserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
 import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
+import { loadModel } from "../connection";
+import { QuizSubmissionDoc } from "../structs/QuizSubmission";
 
 //LET ME KNOW IF YOU CHANGE THESE.
 const SALT_ROUNDS = 10;
@@ -12,20 +14,13 @@ const TOKEN_DURATION = 24*60*60*1000;
 //Just to let you know, the UUIDs in this aren't actually in UUID format anymore because Mongoose Object IDs are better.
 
 class MUser {
-    private userSchema;
-    private userModel;
+    private userModel: mongoose.Model<UserUnsafe>;
     /**
      * Inistantiates the user model.
      */
     constructor() {
-    this.userSchema = getUserSchema();
-        if (Object.hasOwn(mongoose.models, "User")){
-            this.userModel = mongoose.models["User"];
-        } else {
-            this.userModel = mongoose.model<IUserUnsafe>("User", this.userSchema);
-        }
+        this.userModel = loadModel("User", getUserSchema());
     }
-
 
     /**
      * Attempts to search for the given UUID in the database and return the user.
@@ -75,7 +70,7 @@ class MUser {
      * @param password The user's password
      * @returns A promise for UserSession or a UserError enum, depending if the opration was successful or not. If there is a serious error (a database problem), then the promise will be rejected.
      */
-    public async createNewUser(email: string, displayName: string, password: string): Promise<IUserSession | UserError> {
+    public async createNewUser(email: string, displayName: string, password: string): Promise<UserSession | UserError> {
         if (!validateEmail(email)) {
             return UserError.Invalid_Email;
         } else if (!validateDisplayName) {
@@ -107,7 +102,7 @@ class MUser {
      * @param email 
      * @param password 
      */
-    public async userLogin(email: string, password: string): Promise<IUserSession | UserError> {
+    public async userLogin(email: string, password: string): Promise<UserSession | UserError> {
         if (typeof email !== "string"){
             return UserError.Invalid_Email;
         } else if (typeof password !== "string") {
@@ -132,7 +127,7 @@ class MUser {
      * @param userDoc The mongoose object and document for the user.
      * @returns The UserSession object that has been made.
      */
-    private async createUserSession(userDoc: UserDocument): Promise<IUserSession> {
+    private async createUserSession(userDoc: UserDocument): Promise<UserSession> {
         let token = crypto.randomBytes(32).toString("base64");
         let expiry = new Date(Date.now() + TOKEN_DURATION);
         let session: Session = {
@@ -142,7 +137,7 @@ class MUser {
 
         userDoc.activeSessions.push(session); //Update activesessions.
         await userDoc.save(); //Save the document.
-        let userSession: IUserSession = toUser(userDoc) as IUserSession;
+        let userSession: UserSession = toUser(userDoc) as UserSession;
         userSession.session = session;
 
         return userSession;
@@ -161,6 +156,28 @@ class MUser {
             }
         }
         return null;
+    }
+
+    /**
+     * Gets a document for a user UUID and token.
+     * @param uuid 
+     * @param token 
+     * @returns The user document if valid, otherwise a UserError.
+     */
+    public async getUserUnsafe(uuid: string, token: string): Promise<UserDocument | UserError> {
+        let user = await this.getUserDocByUUID(uuid);
+
+        if (!user){
+            return UserError.User_Does_Not_Exist;
+        }
+
+        let session = this.validateSession(user, token);
+
+        if (!session) {
+            return UserError.Invalid_Token;
+        }
+
+        return user;
     }
 
     /**
@@ -188,6 +205,15 @@ class MUser {
         } else { //User not found.
             return UserError.User_Does_Not_Exist;
         }
+    }
+
+    public async addQuizSubmission(userDoc: UserDocument, submission: QuizSubmissionDoc) {
+      userDoc.quizSubmissions.push({
+        quizId: submission.quizId,
+        submissionId: submission._id
+      });
+
+      await userDoc.save();
     }
 }
 

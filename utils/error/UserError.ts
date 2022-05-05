@@ -1,6 +1,5 @@
 import { NextApiResponse } from "next";
-import APIError from "./APIError";
-import ErrorType from "./ErrorType";
+import { APIError, ErrorType } from "./APIError";
 
 /**
  * Types of user error.
@@ -62,13 +61,15 @@ export function getErrorMessage(err: UserError): string {
     }
 }
 
+//TODO: Merge with code in QuizError.
 export async function handleUserResponse<T>(prom: Promise<T | UserError>, res: NextApiResponse<T | APIError>){
     try {
         let result = await prom;
         if (typeof result === "number") {
             res.status(getStatusCode(result)).json(new APIError(
                 ErrorType.User_Error,
-                getErrorMessage(result)
+                getErrorMessage(result),
+                result
             ));
         } else {
             res.status(200).json(result);

@@ -1,10 +1,10 @@
 import { connect } from "../../../utils/connection";
 import { NextApiRequest, NextApiResponse } from "next";
 import MUser from "../../../utils/models/MUser";
-import APIError from "../../../utils/error/APIError";
-import { IUserSession } from "../../../utils/structs/User";
+import { UserSession } from "../../../utils/structs/User";
 import { handleUserResponse } from "../../../utils/error/UserError";
 import { methodGuard } from "../../../utils/general";
+import { APIError } from "../../../utils/error/APIError";
 
 const mUser = new MUser();
 /**
@@ -13,7 +13,7 @@ const mUser = new MUser();
  * @param res 
  * @returns 
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse<IUserSession | APIError>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<UserSession | APIError>) {
     await connect();
 
     if (!methodGuard(["POST"], req, res)){

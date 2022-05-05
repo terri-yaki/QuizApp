@@ -1,8 +1,7 @@
 //General utility functions and stuff like that.
 
 import { NextApiRequest, NextApiResponse } from "next";
-import APIError from "./error/APIError";
-import ErrorType from "./error/ErrorType";
+import { APIError, ErrorType } from "./error/APIError";
 
 export function envVar(varName: string): string {
     if (process.env[varName] === undefined) {

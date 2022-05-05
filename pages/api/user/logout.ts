@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { connect } from "../../../utils/connection";
-import APIError from "../../../utils/error/APIError";
+import { APIError } from "../../../utils/error/APIError";
 import { handleUserResponse } from "../../../utils/error/UserError";
 import { methodGuard } from "../../../utils/general";
 import MUser from "../../../utils/models/MUser";

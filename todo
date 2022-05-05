@@ -1,0 +1,4 @@
+Add response type to quiz submission endpoint.
+Add request content-type checking to the methodGuard method.
+Add timestamp to quiz submissions.
+something i forgot whoops

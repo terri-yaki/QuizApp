@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as fs from 'fs';
 import {envVar, nullToUndefined} from "./general";
-import { IQuizQuestion } from './structs/Quiz';
+import { QuizQuestion } from './structs/Quiz';
 
 const token = envVar("QUIZAPI_TOKEN");
 
@@ -21,8 +21,8 @@ async function getQuizData(topic: string){
     }
 }
 
-function dataToQuestions(data: any): IQuizQuestion[] { //This does not check data validity.W
-    let questions:IQuizQuestion[]  = [];
+function dataToQuestions(data: any): QuizQuestion[] { //This does not check data validity.W
+    let questions:QuizQuestion[]  = [];
 
     for (let ques of data) {
         let {id, question, description, explanation, tip, category, difficulty} = ques;
@@ -52,7 +52,7 @@ function dataToQuestions(data: any): IQuizQuestion[] { //This does not check dat
             }
         }
 
-        let qq: IQuizQuestion = {
+        let qq: QuizQuestion = {
             id,
             question,
             description: nullToUndefined(description as string),
@@ -71,7 +71,7 @@ function dataToQuestions(data: any): IQuizQuestion[] { //This does not check dat
     return questions;
 }
 
-export async function getQuestionSet(topic: string): Promise<IQuizQuestion[]> {
+export async function getQuestionSet(topic: string): Promise<QuizQuestion[]> {
     let questions = await getQuizData(topic);
     return dataToQuestions(questions);
 }

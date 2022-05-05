@@ -4,18 +4,18 @@ import {Schema} from "mongoose";
 //For more information see: 
 //https://quizapi.io/docs/1.0/overview
 
-interface IQuizBase {
+interface QuizBase {
     date: Date,
     topic: string,
 }
 
-export interface IQuizPartial extends IQuizBase { //This is what will be sent to the user.
+export interface QuizPartial extends QuizBase { //This is what will be sent to the user.
     uuid: string,
-    questions: IQuizQuestionPartial[]
+    questions: QuizQuestionPartial[]
 }
 
-export interface IQuizFull extends IQuizBase { //The user should never see this struct.
-    questions: IQuizQuestion[]
+export interface QuizFull extends QuizBase { //The user should never see this struct.
+    questions: QuizQuestion[]
 }
 
 export interface AnswerPartial {
@@ -27,9 +27,9 @@ export interface Answer extends AnswerPartial {
     correct: boolean
 }
 
-export type IQuizDoc = mongoose.Document<unknown, any, IQuizFull> & IQuizFull& {_id: mongoose.Types.ObjectId};
+export type QuizDoc = mongoose.Document<unknown, any, QuizFull> & QuizFull& {_id: mongoose.Types.ObjectId};
 
-export interface IQuizQuestionPartial {
+export interface QuizQuestionPartial {
     id: number, //(Q)uiz (A)PI (ID).
     question: string,
     description?: string,
@@ -40,7 +40,7 @@ export interface IQuizQuestionPartial {
     difficulty: string
 }
 
-export interface IQuizQuestion extends IQuizQuestionPartial {
+export interface QuizQuestion extends QuizQuestionPartial {
     answers: Answer[],
     explanation?: string,
     tip?: string,
@@ -66,8 +66,8 @@ export function getQuizSchema(){
     });
 }
 
-export function censorQuiz(quiz: IQuizDoc): IQuizPartial {
-    let partialQuestions: IQuizQuestionPartial[] = [];
+export function censorQuiz(quiz: QuizDoc): QuizPartial {
+    let partialQuestions: QuizQuestionPartial[] = [];
     for (let q of quiz.questions) {
         let ans:AnswerPartial[] = [];
         
