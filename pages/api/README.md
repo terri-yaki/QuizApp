@@ -4,12 +4,14 @@ All methods described here will be on the `/api` path.
 A status code of **500** means that there has been an internal server error and the request coud not be completed. Strings in API parameters do not include the quotes. Please remember to URL encode your query. Requests that require authentication require the user's UUID and Session Token.
 
 ## Users
-### Creating an acccount
+### Creating an Acccount
 Creates a user account and return the details of the user with a session token.
 
 Path: `/user/create`
 
 Method: `POST`
+
+Content-Type: `application/x-www-form-urlencoded`
 
 Authentication Required: **No**
 
@@ -19,7 +21,7 @@ Authentication Required: **No**
 - `password`:`string` - A password for the user. (*TODO: Clarify password requirements.*)
 
 #### Responses:
-**200** - Ok. The user account was successfully created. The account details ans session will be returned in the following form:
+**200** - Ok. The user account was successfully created. The account details and session will be returned in the following form:
 ```json
 {
     "uuid":"627148757b2d677dc2ad5bae",
@@ -42,6 +44,8 @@ Path: `/user/login`
 
 Method: `POST`
 
+Content-Type: `application/x-www-form-urlencoded`
+
 Authentication Required: **No**
 
 #### Parameters:
@@ -62,13 +66,15 @@ Path: `/user/logout`
 
 Method: `POST`
 
+Content-Type: `application/x-www-form-urlencoded`
+
 Authentication Required: **Yes**
 
 #### Parameters:
 - `uuid`:`string` - The user's UUID.
 - `token`:`string` - The current session token.
 
-### Responses:
+#### Responses:
 **200** - Ok. The user's session was revoked successfully.
 
 **401** - Invalid Session. The user's token was invalid.
@@ -76,7 +82,7 @@ Authentication Required: **Yes**
 **404** - Not Found. A user could not be found for the given UUID.
 
 ## Quizzes
-### Requesting a quiz
+### Requesting a Quiz
 Generates or retrieves a quiz for the current date and provided topic.
 
 Path: `/quiz/[category]`
@@ -96,7 +102,7 @@ Authentication Required: **No**
 
 #### Responses:
 **200** - Ok. A quiz will be returned. Below is an example of the data you can expect.:
-```json
+```jsonc
 {
   "uuid": "6271405584b18acea68c6389",
   "date": "2022-05-03T00:00:00.000Z",
@@ -110,16 +116,92 @@ Authentication Required: **No**
           "id": 0,
           "name": "array=(“Hi” “my” “name” “is”)"
         },
-        ... More Items...
+        /* ... More Items... */
       ],
       "multiAnswers": false,
       "tags": [],
       "category": "Linux",
       "difficulty": "Medium"
     },
-    ... More Items ...
+    /* ... More Items ... */
   ],
 }
 ```
 
 **400** - Invalid topic. Either no topic or an invalid topic was provided.
+
+### Submitting a Quiz
+Submits a quiz that has been partially or fully completed. This can be one big submission or multiple smaller submissions. Unlike other POST requests, this one uses JSON instead of a URL-Encoded Querystring beacuse its structure is complex.
+
+#### Request Format:
+Path: `/quiz/submit`
+
+Method: `POST`
+
+Content-Type: `application/json`
+
+Authentication Required: **Yes**
+
+Data Structure (see [QuizSubmission.ts](https://github.com/TheGroup18SoftwareProject/TheQuizApp/blob/dc688ed08d69c5f8e03260f030022868954cd1a8/utils/structs/QuizSubmission.ts#L109) for the schema):
+```jsonc
+{
+  "userId": "string", //User's UUID.
+  "token": "string", //User's token.
+  "quizId": "string", //Quiz UUID.
+  "questions": { //Quiz questions.
+    "id": "number" //Question ID.
+    "answers": {
+      "id": "number", //Answer ID.,
+      "selected": "boolean" //Whether the answer has been selected or not.
+    }[]
+  }[]
+}
+```
+
+#### Response:
+
+**200** - Ok. The quiz was submitted successfully. A response will look something like this:
+```jsonc
+{
+   "uuid":"62743143140381059c5bdb67",
+   "quizId":"6273d2f6571dba3de63e1fd7",
+   "complete":false,
+   "score":4,
+   "total":6,
+   "lastUpdate":"2022-05-05T20:19:15.411Z",
+   "questions":[
+      {
+         "id":662,
+         "answers":[
+            {
+               "id":0,
+               "selected":false,
+               "correct":true
+            },
+            {
+               "id":1,
+               "selected":true,
+               "correct":false
+            },
+            {
+               "id":2,
+               "selected":false,
+               "correct":false
+            },
+            {
+               "id":3,
+               "selected":false,
+               "correct":true
+            }
+         ]
+      },
+      /* ... More Items ...*/
+   ]
+}
+```
+
+**400** - Bad Request. Either the quiz ID was invalid, a non existent quiz question was present, or an answer was missing.
+
+**404** - Not found. The quiz ID could not be resolved to quiz.
+
+**409** - Cannot Overwrite. Quiz questions cannot be overwritten.

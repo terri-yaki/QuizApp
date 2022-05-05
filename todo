@@ -1,4 +1,4 @@
-Add response type to quiz submission endpoint.
+Make submissions error when multiple things are selected when there is only one right answer.
 Add request content-type checking to the methodGuard method.
-Add timestamp to quiz submissions.
+Clarify password requirements.
 something i forgot whoops

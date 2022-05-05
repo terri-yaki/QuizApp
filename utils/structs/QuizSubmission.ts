@@ -20,6 +20,7 @@ interface QuizSubmissionBase extends QuizSubmissionUnmarkedBase { //Not used by 
   score: number,
   total: number,
   complete: boolean,
+  lastUpdate: Date,
   questions: MarkedQuestion[],
 }
 
@@ -62,6 +63,7 @@ export function getQuizSubmissionSchema(){
     score: Number,
     total: Number,
     complete: Boolean,
+    lastUpdate: Date,
     questions: [{
       id: Number,
       answers: [{
@@ -102,11 +104,12 @@ export function toQuizSubmissionUser(sub: QuizSubmissionDoc): QuizSubmissionUser
     complete: sub.complete,
     score: sub.score,
     total: sub.total,
-    questions
+    lastUpdate: sub.lastUpdate,
+    questions,
   }
 }
 
-export function getQuizSubmissionJSONSchema(){
+export function getQuizSubmissionJSONSchema(){ //IMPORTANT: UPDATE API README.MD WHEN YOU CHANGE THIS!!!
   return {
     type: "object",
     required: true,
@@ -118,10 +121,6 @@ export function getQuizSubmissionJSONSchema(){
       token: {
         type: "string",
         required: true
-      },
-      uuid: {
-        type: "string",
-        required: false
       },
       quizId: {
         type: "string",

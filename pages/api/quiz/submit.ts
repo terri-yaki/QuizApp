@@ -15,7 +15,7 @@ const mUser = new MUser();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<QuizSubmissionUser | APIError>) {
   await connect(); //Connect to db.
   
-  if (!methodGuard(["POST"], req, res)){
+  if (!methodGuard(["POST"], req, res, "application/json")){
     return;
   }
   let submission: QuizSubmissionUnmarkedUser & {userId: string, token: string} = req.body;

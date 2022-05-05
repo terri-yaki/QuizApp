@@ -36,7 +36,7 @@ axios.get("http://127.0.0.1:3000/api/quiz/linux").then((res)=>{
   console.log("Payload: ", data);
 
   axios.post("http://127.0.0.1:3000/api/quiz/submit", data=data).then(res=>{
-    console.log(res.data);
+    console.log(JSON.stringify(res.data));
   });
 }).catch((e)=>{
   console.log("An error occurred.");

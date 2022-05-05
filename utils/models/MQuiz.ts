@@ -165,7 +165,8 @@ class MQuiz {
             }
 
             existingSub.score += score; //Increment total score.
-            existingSub.total += markedQs.length;
+            existingSub.total += markedQs.length; //Add to number of questions done.
+            existingSub.lastUpdate = new Date(); //Update last update.
 
             if (existingSub.questions.length === quiz.questions.length) { //Check if the quiz is totally complete.
                 existingSub.complete = true;
@@ -181,7 +182,8 @@ class MQuiz {
                 score,
                 total: markedQs.length,
                 complete,
-                questions: markedQs
+                questions: markedQs,
+                lastUpdate: new Date() //Current date right now
             };
 
             return await new this.subModel(sub).save();

@@ -16,7 +16,7 @@ const mUser = new MUser();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<UserSession | APIError>) {
     await connect();
 
-    if (!methodGuard(["POST"], req, res)){
+    if (!methodGuard(["POST"], req, res, "application/x-www-form-urlencoded")){
         return;
     }
     

@@ -1,5 +1,4 @@
 export class APIError {
-    //todo finish.
     public type: ErrorType;
     public message:string;
     public error = true;
@@ -22,6 +21,7 @@ export class APIError {
 
 export enum ErrorType {
     Invalid_Method,
+    Invalid_Content_Type,
     Server_Error,
     User_Error,
     Quiz_Error,
