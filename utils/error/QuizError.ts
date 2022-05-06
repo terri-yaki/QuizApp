@@ -32,6 +32,7 @@ export function getErrorMessage(err: QuizError): string {
     case QuizError.Invalid_Category:
       return "This category does not exist.";
     case QuizError.Invalid_Quiz_Id:
+      return "The quiz ID provided is invalid.";
     case QuizError.Quiz_Not_Found:
       return "This quiz does not exist.";
     case QuizError.Submission_Not_Found:

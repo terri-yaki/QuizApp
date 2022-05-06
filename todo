@@ -1,4 +1,4 @@
 Make submissions error when multiple things are selected when there is only one right answer.
-Add request content-type checking to the methodGuard method.
 Clarify password requirements.
+Refactor the Quiz endpoints to make the responses simpler like the User endpoints.
 something i forgot whoops

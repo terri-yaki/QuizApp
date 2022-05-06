@@ -207,6 +207,11 @@ class MUser {
         }
     }
 
+    /**
+     * Links a quiz submission to a user.
+     * @param userDoc The user document to add the submission to.
+     * @param submission The quiz submission document to be assigned to the user.
+     */
     public async addQuizSubmission(userDoc: UserDocument, submission: QuizSubmissionDoc) {
       userDoc.quizSubmissions.push({
         quizId: submission.quizId,
@@ -215,6 +220,8 @@ class MUser {
 
       await userDoc.save();
     }
+
+    
 }
 
 export default MUser;

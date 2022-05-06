@@ -67,9 +67,9 @@ class MQuiz {
      * @param topic The topic of the quiz to find/generate.
      * @returns Today's quiz, or null if the category was invalid.
      */
-    public async getTodaysQuiz(topic: string): Promise<QuizPartial | null> { //Gets today's quiz from either the database or QuizAPI.
+    public async getTodaysQuiz(topic: string): Promise<QuizPartial | QuizError> { //Gets today's quiz from either the database or QuizAPI.
         if (typeof topic !== "string" || allowedTopics.indexOf(topic) < 0) {
-            return null;
+            return QuizError.Invalid_Category;
         }
 
         let today = currentDay();
@@ -88,7 +88,34 @@ class MQuiz {
         return censorQuiz(quiz); //Return the quiz.
     }
 
-    //TODO: Refactor the null into a QuizError enum. Also write documentation for this function.
+    /**
+     * Retrieve a quiz by its UUID.
+     * @param id The UUID of the quiz.
+     * @returns The quiz (but without the correct answers).
+     */
+    public async getQuizById(id: string): Promise<QuizPartial | QuizError> {
+        let oid: ObjectId;
+        try {
+            oid = mongoose.Types.ObjectId.createFromHexString(id);
+        } catch (e) {
+            return QuizError.Invalid_Quiz_Id;
+        }
+
+        let quiz = await this.quizModel.findById(oid);
+
+        if (!quiz) {
+            return QuizError.Quiz_Not_Found;
+        }
+
+        return censorQuiz(quiz);
+    }
+
+    /**
+     * Marks and saves a quiz submission from a user.
+     * @param sub The user data that has been submitted.
+     * @param existingSub An exsisting submission document to overwrite, if there is one.
+     * @returns The submission document that has been saved in the database, or an error if the submission failed.
+     */
     public async submitQuizQuestions(sub: QuizSubmissionUnmarkedUser, existingSub?: QuizSubmissionDoc): Promise<QuizSubmissionDoc | QuizError>{
         if (existingSub && existingSub.quizId.toString() !== sub.quizId){ //Prevent mistakes from happening here.
             throw "existingSub cannot be null if the user requested an append to an existing submission!";
@@ -190,6 +217,11 @@ class MQuiz {
         }    
     }
 
+    /**
+     * Retrieves a submission by it's database document objectId.
+     * @param oid The object ID to retrieve the submission for.
+     * @returns 
+     */
     public async getSubmissionByObjectId(oid: mongoose.Types.ObjectId): Promise<QuizSubmissionDoc | QuizError>{ //Invalid object IDs should not be possible.
         let doc = await this.subModel.findById(oid);
 
@@ -199,5 +231,6 @@ class MQuiz {
             return doc;
         }
     }
+
 }
 export default MQuiz;

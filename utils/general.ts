@@ -37,6 +37,7 @@ export function removePrivates(thing: any) {
 
 /**
  * Guards for invalid methods and the wrong content types.
+ * NOTE: THIS METHOD WILL HANDLE API ERROR RESPONSES FOR YOU SO YOU ONLY NEED TO ADD A RETURN AFTER THIS.
  * @param validMethods Valid methods. In uppercase.
  * @param req request
  * @param res response

@@ -5,10 +5,7 @@ import MQuiz from '../../../utils/models/MQuiz';
 import { connect } from '../../../utils/connection';
 import { methodGuard } from '../../../utils/general';
 import { QuizPartial } from '../../../utils/structs/Quiz';
-import { QuizError } from '../../../utils/error/QuizError';
-
-
-
+import { getErrorMessage, getStatusCode, QuizError } from '../../../utils/error/QuizError';
 
 const mQuiz = new MQuiz();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<QuizPartial | APIError>) {
@@ -21,14 +18,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     try {
         const category = req.query.category as string;
         let quiz = await mQuiz.getTodaysQuiz(category);
-        if (quiz) {
-            res.status(200).json(quiz);
-        } else {
-            res.status(400).json(new APIError(
+        if (typeof quiz === "number") {
+            res.status(getStatusCode(quiz)).json(new APIError(
                 ErrorType.Quiz_Error,
-                "A quiz cannot be made using this category!",
-                QuizError.Invalid_Category
+                getErrorMessage(quiz),
+                quiz
             ));
+        } else {
+            res.status(200).json(quiz);
         }
     } catch (e) {
         console.log("Internal Server Error: ", e);

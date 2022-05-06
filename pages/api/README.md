@@ -130,6 +130,27 @@ Authentication Required: **No**
 
 **400** - Invalid topic. Either no topic or an invalid topic was provided.
 
+### Requesting a Quiz (By ID)
+Retrieves a quiz from the database by its ID.
+
+Path: `/quiz/get?id=[id]`
+
+Method: `GET`
+
+Authentication Requured: **No**
+
+#### Parameters:
+
+- `id`:`string` - The ID of the quiz.
+
+#### Responses:
+
+**200** - Ok. Same response format as [requesting a quiz](#requesting-a-quiz).
+
+**400** - Bad Request. Quiz ID provided was not a valid ID.
+
+**404** - Not Found. A quiz could not be found with the provided ID.
+
 ### Submitting a Quiz
 Submits a quiz that has been partially or fully completed. This can be one big submission or multiple smaller submissions. Unlike other POST requests, this one uses JSON instead of a URL-Encoded Querystring beacuse its structure is complex.
 

@@ -1,10 +1,14 @@
 import axios from 'axios';
-import * as fs from 'fs';
 import {envVar, nullToUndefined} from "./general";
 import { QuizQuestion } from './structs/Quiz';
 
 const token = envVar("QUIZAPI_TOKEN");
 
+/**
+ * Makes a call to QuizAPI for a quiz.
+ * @param topic The topic to retrieve a quiz for, "general" will provide questions from all topics.
+ * @returns A quizAPI quiz.
+ */
 async function getQuizData(topic: string){
     let response = await axios({
         url: "https://quizapi.io/api/v1/questions/",
@@ -21,6 +25,11 @@ async function getQuizData(topic: string){
     }
 }
 
+/**
+ * Takes the QuizAPI JSON result and converts it into a QuizQuestion array.
+ * @param data The QuizAPI JSON data from the API call.
+ * @returns A QuizQuestionArray.
+ */
 function dataToQuestions(data: any): QuizQuestion[] { //This does not check data validity.W
     let questions:QuizQuestion[]  = [];
 
