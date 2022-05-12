@@ -7,6 +7,10 @@
     color: #0000EE;
 }
 
+.usernameLink {
+    padding: 4px;
+}
+
 .profile {
     display: flex;
     flex-direction: row;

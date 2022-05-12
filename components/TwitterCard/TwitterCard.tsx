@@ -12,7 +12,7 @@ const TwitterCard = (props: ITweetData) => {
             <div className={styles.profile}>
                 <img src={props.image} alt={'profile image'}/>
 
-                <a href={url}>
+                <a href={url} className={styles.usernameLink}>
                     <p className={styles.username}>{props.name}</p>
                 </a>
             </div>
