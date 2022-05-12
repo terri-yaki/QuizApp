@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import io, {Socket} from 'socket.io-client';
 import TwitterCard from '../TwitterCard/TwitterCard'
 import styles from './TwitterStream.module.css'
-import {ITweetData} from "../../helpers/twitter/ITweetData";
+import {ITweetData} from "../../utils/twitter/ITweetData";
 
 let socket: Socket;
 

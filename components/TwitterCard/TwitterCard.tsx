@@ -1,5 +1,5 @@
 import React from 'react';
-import {ITweetData} from "../../helpers/twitter/ITweetData";
+import {ITweetData} from "../../utils/twitter/ITweetData";
 import styles from './TwitterCard.module.css'
 
 // A card which contains all information on a tweet
