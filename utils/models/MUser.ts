@@ -6,6 +6,7 @@ import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
 import { loadModel } from "../connection";
 import { QuizSubmissionDoc } from "../structs/QuizSubmission";
+import { delBasePath } from "next/dist/shared/lib/router/router";
 
 //LET ME KNOW IF YOU CHANGE THESE.
 const SALT_ROUNDS = 10;
@@ -144,18 +145,23 @@ class MUser {
     }
 
     /**
-     * Checks if a user's session is valid.
+     * Checks if a user's session is valid. Prunes any expired sessions.
      * @param userDoc The user document to validate.
      * @param token The token to check
-     * @returns 
+     * @returns The session that was found, otherwise null.
      */
-    private validateSession(userDoc: UserDocument, token: string): SessionDocument | null {
+    private async validateSession(userDoc: UserDocument, token: string): Promise<SessionDocument | null> { //Validate sessions (and prune expired ones.)
+        let foundSession: SessionDocument | null = null;
+
         for (let session of userDoc.activeSessions) {
-            if (session.token === token && session.expiry.getTime() > Date.now()) {
-                return session; //Return the session if it is valid.
+            if (session.expiry.getTime() < Date.now()){
+                session.remove();
+            } else if (session.token === token){
+                foundSession = session;
             }
         }
-        return null;
+        await userDoc.save();
+        return foundSession;
     }
 
     /**
@@ -171,7 +177,7 @@ class MUser {
             return UserError.User_Does_Not_Exist;
         }
 
-        let session = this.validateSession(user, token);
+        let session = await this.validateSession(user, token);
 
         if (!session) {
             return UserError.Invalid_Token;
@@ -187,14 +193,13 @@ class MUser {
      * @returns True if successful, otherwise a UserError.
      */
     public async userLogout(uuid: string, token: string): Promise<true | UserError> {
-        //TODO: Prune expired tokens as well.
         if (typeof uuid !== "string") {
             return UserError.Invalid_UUID;
         }
 
         let userDoc = await this.getUserDocByUUID(uuid);
         if (userDoc) {
-            let session = this.validateSession(userDoc, token);
+            let session = await this.validateSession(userDoc, token);
             if (session){
                 session.remove();
                 await userDoc.save();
