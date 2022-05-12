@@ -27,7 +27,6 @@ class MUser {
      * Attempts to search for the given UUID in the database and return the user.
      * @param uuid The UUID of the user to search for.
      * @returns Either the user if found, or null (in this case you should 404).
-     * TODO: Make a safe version of this function.
      */
     private async getUserDocByUUID(uuid: string): Promise<UserDocument | null> {
         let oid;
@@ -74,9 +73,9 @@ class MUser {
     public async createNewUser(email: string, displayName: string, password: string): Promise<UserSession | UserError> {
         if (!validateEmail(email)) {
             return UserError.Invalid_Email;
-        } else if (!validateDisplayName) {
+        } else if (!validateDisplayName(displayName)) {
             return UserError.Invalid_Display_Name;
-        } else if (!validatePassword) {
+        } else if (!validatePassword(password)) {
             return UserError.Invalid_Password;
         } else if (await this.getUserDocByEmail(email)) {
             return UserError.User_Already_Exists;
