@@ -1,5 +1,18 @@
 # Quizapp
-Made with 'create-next-app'
+Made with 'create-next-app'.
+
+## API Endpoint Documentation.
+See [the api directory](/pages/api).
+
+## Database
+In order to use the database, you must provide a `DATABASE_URL` environment variable in your `.env.local` file (use 127.0.0.1 instead of localhost).
+
+
+Please make sure you have an accessible MongoDB database running with write permissions.
+
+
+## QuizAPI
+To generate quizzes, there must be a QuizAPI key provided as `QUIZAPI_TOKEN` as an environment variable (`.env.local`).
 
 ## Notes:
 1. The old html files and images have been put into the old-assets directory and should be moved into the public folder when used.

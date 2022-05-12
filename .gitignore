@@ -13,6 +13,9 @@
 # production
 /build
 
+#typescript testing
+/tsbuild
+
 # debug
 npm-debug.log*
 yarn-debug.log*

@@ -1,0 +1,327 @@
+[
+  {
+    "id": 7,
+    "question": "How do we change permissions on files",
+    "description": null,
+    "answers": {
+      "answer_a": "chown",
+      "answer_b": "chmod",
+      "answer_c": "chattr",
+      "answer_d": "lsattr",
+      "answer_e": "We Can't change them",
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "false",
+      "answer_b_correct": "true",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_a",
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Linux"
+      },
+      {
+        "name": "BASH"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 704,
+    "question": "What is LILO w.r.t linux?",
+    "description": null,
+    "answers": {
+      "answer_a": "LILO means linux loader, which loads the kernel into memory and starts the OS.",
+      "answer_b": "LILO means linux loader, which loads the OS into memory and starts the GUI.",
+      "answer_c": "LILO means linux loader, which loads the GUI into memory so the user can see what's going on.",
+      "answer_d": "LILO means linux loader, which loads the software into memory and starts the kernel then the OS.",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "true",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": null,
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Linux"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 682,
+    "question": "Expand JFS in context of file system?",
+    "description": null,
+    "answers": {
+      "answer_a": "Journal File System",
+      "answer_b": "Journal Failing System",
+      "answer_c": "Journal File Service",
+      "answer_d": "Journal Failing Service",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "true",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": null,
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "BASH"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 723,
+    "question": "Which command is used to create resources in Kubernetes?",
+    "description": null,
+    "answers": {
+      "answer_a": "kubectl create -f ./my-manifest.yaml",
+      "answer_b": "kubectl deploy -f ./my-manifest.yaml",
+      "answer_c": "kubectl apply -f ./my-manifest.yaml",
+      "answer_d": "kubectl fuse -f ./my-manifest.yaml",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "false",
+      "answer_b_correct": "false",
+      "answer_c_correct": "true",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_a",
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Kubernetes"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 38,
+    "question": "To inspect the the boot process of a Linux system, which command can be used?",
+    "description": null,
+    "answers": {
+      "answer_a": "boot",
+      "answer_b": "dmesg",
+      "answer_c": "cat /var/log/start",
+      "answer_d": "cat /var/log/boot.txt",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "false",
+      "answer_b_correct": "true",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_b",
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Linux"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Medium"
+  },
+  {
+    "id": 695,
+    "question": "Which command can be used to change file access permission bits?",
+    "description": null,
+    "answers": {
+      "answer_a": "chmod",
+      "answer_b": "chown",
+      "answer_c": "umask",
+      "answer_d": "chperm",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "true",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": null,
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "BASH"
+      },
+      {
+        "name": "Linux"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 731,
+    "question": "How to compares the current state of the cluster against the state that the cluster would be in if the manifest was applied in Kubernetes?",
+    "description": null,
+    "answers": {
+      "answer_a": "kubectl show -f ./my-manifest.yaml",
+      "answer_b": "kubectl log -f ./my-manifest.yaml",
+      "answer_c": "kubectl state -f ./my-manifest.yaml",
+      "answer_d": "kubectl diff -f ./my-manifest.yaml",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "false",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "true",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_a",
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Kubernetes"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 700,
+    "question": "Explain the purpose of nohup command.",
+    "description": null,
+    "answers": {
+      "answer_a": "To keep the command running even after the user who issues the command has logged out.",
+      "answer_b": "To start the command after the user who issues the command has logged out.",
+      "answer_c": "To start the command after a certain statement has been approved.",
+      "answer_d": null,
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "true",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": null,
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "BASH"
+      },
+      {
+        "name": "Linux"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Hard"
+  },
+  {
+    "id": 21,
+    "question": "Which of the following is a text editor that can be used in command mode to edit files on a Linux system?",
+    "description": null,
+    "answers": {
+      "answer_a": "vi or vim",
+      "answer_b": "lsof",
+      "answer_c": "open",
+      "answer_d": "edit",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "true",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "false",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_a",
+    "explanation": null,
+    "tip": null,
+    "tags": [
+      {
+        "name": "Linux"
+      }
+    ],
+    "category": "Linux",
+    "difficulty": "Easy"
+  },
+  {
+    "id": 1,
+    "question": "How to delete a directory in Linux?",
+    "description": "The rmdir commands deletes only empty directories. To delete a folder recursively use the rm -rf command.",
+    "answers": {
+      "answer_a": "ls",
+      "answer_b": "delete",
+      "answer_c": "remove",
+      "answer_d": "rmdir",
+      "answer_e": null,
+      "answer_f": null
+    },
+    "multiple_correct_answers": "false",
+    "correct_answers": {
+      "answer_a_correct": "false",
+      "answer_b_correct": "false",
+      "answer_c_correct": "false",
+      "answer_d_correct": "true",
+      "answer_e_correct": "false",
+      "answer_f_correct": "false"
+    },
+    "correct_answer": "answer_d",
+    "explanation": "rmdir deletes an empty directory",
+    "tip": null,
+    "tags": [],
+    "category": "Linux",
+    "difficulty": "Easy"
+  }
+]
