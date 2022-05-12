@@ -61,7 +61,7 @@ export function getErrorMessage(err: UserError): string {
     }
 }
 
-//TODO: Merge with code in QuizError.
+//TODO: Merge with code in QuizError (if possible)
 export async function handleUserResponse<T>(prom: Promise<T | UserError>, res: NextApiResponse<T | APIError>){
     try {
         let result = await prom;

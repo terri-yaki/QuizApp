@@ -4,7 +4,10 @@
      * @returns Whether the displayname is valid.
      */
 export function validateDisplayName(displayName: any): boolean{
-    return typeof displayName === "string" && displayName.length > 0; //TODO: Make this more advanced.
+    return (
+        typeof displayName === "string" &&
+        /^([A-Z]|[a-z]|[0-9]|[!?_.-]){3,32}$/.test(displayName)
+    )
 }
 
 /**
@@ -15,8 +18,8 @@ export function validateDisplayName(displayName: any): boolean{
 export function validatePassword(passwd: any): boolean {
     return (
         typeof passwd === "string" &&
-        passwd.length > 8 && //Lower length bound
-        passwd.length < 64 && //Upper length bound
+        passwd.length >= 8 && //Lower length bound
+        passwd.length <= 64 && //Upper length bound
         passwd.search(/[a-z]/) >= 0 && //Lowercase letters.
         passwd.search(/[A-Z]/) >= 0 && //Uppercase letters.
         passwd.search(/[0-9]/) >= 0 && //Numbers.

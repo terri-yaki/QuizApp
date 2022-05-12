@@ -46,3 +46,25 @@ export function getErrorMessage(err: QuizError): string {
   }
 }
 
+//Todo: Refactor with UerError.ts function because its similar (it might be too late to do this)
+export async function handleQuizResponse<T>(prom: Promise<T | QuizError>, res: NextApiResponse<T | APIError>){
+  try {
+      let result = await prom;
+      if (typeof result === "number") {
+          res.status(getStatusCode(result)).json(new APIError(
+              ErrorType.Quiz_Error,
+              getErrorMessage(result),
+              result
+          ));
+      } else {
+          res.status(200).json(result);
+      }
+  } catch (e){
+      console.error("An internal server error occurred:", e);
+      res.status(500).json(new APIError(
+          ErrorType.Server_Error,
+          "An internal server error occurred."
+      ));
+  }
+  res.end();
+}

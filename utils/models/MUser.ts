@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import * as bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-import { getUserSchema, User, UserSession, UserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
+import { getUserSchema, UserSession, UserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
 import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
 import { loadModel } from "../connection";
