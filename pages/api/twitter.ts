@@ -9,7 +9,7 @@ import {
     addTwitterRules, getTweets,
     loginTwitterAPI,
     streamTwitterTweets
-} from "../../helpers/twitter/twitter-helper";
+} from "../../utils/twitter/twitter-helper";
 
 // A boolean which causes the twitter client to only connect once
 // Instead of it creating a new one for each request
@@ -17,7 +17,7 @@ let isTwitterConnected: boolean = false;
 
 // Dev Boolean
 // Should be false in production
-let usingDummyTweets: boolean = true;
+let usingDummyTweets: boolean = false;
 
 // Dev Counter
 // Used for the dummy tweets
