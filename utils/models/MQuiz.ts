@@ -148,6 +148,8 @@ class MQuiz {
 
             let markedAs: MarkedAnswer[] = [];
             let allCorrect = true;
+            let numberSelected = 0;
+
             for (let correctAns of correspondingQ.answers) { //Index answers.
                 let subA = subQ.answers.find((ans)=>{
                     return ans.id === correctAns.id;
@@ -158,7 +160,14 @@ class MQuiz {
                 }
 
                 let isCorrect = correctAns.correct === subA.selected;
-                allCorrect = isCorrect;
+                
+                if (!isCorrect) { //Mark it so that not all the questions are correct.
+                    allCorrect = false;
+                }
+
+                if (subA.selected) {
+                    numberSelected++;
+                }
 
                 markedAs.push({
                     id: subA.id,
@@ -169,6 +178,10 @@ class MQuiz {
 
             if (allCorrect) { //Grant score if all the questions are correct.
                 score++;
+            }
+
+            if (!correspondingQ.multiAnswers && numberSelected !== 1) { //Either none or many answers were selected in a question where there is only one right answer.
+                return QuizError.One_Choice_Only;
             }
 
             markedQs.push({

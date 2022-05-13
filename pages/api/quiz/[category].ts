@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from 'next'
-import {APIError, ErrorType} from '../../../utils/error/APIError';
+import {APIError} from '../../../utils/error/APIError';
 import MQuiz from '../../../utils/models/MQuiz';
 import { connect } from '../../../utils/connection';
 import { methodGuard } from '../../../utils/general';
 import { QuizPartial } from '../../../utils/structs/Quiz';
-import { getErrorMessage, getStatusCode, handleQuizResponse, QuizError } from '../../../utils/error/QuizError';
+import { handleQuizResponse } from '../../../utils/error/QuizError';
 
 const mQuiz = new MQuiz();
 export default async function handler(req: NextApiRequest, res: NextApiResponse<QuizPartial | APIError>) {

@@ -10,6 +10,7 @@ export enum QuizError {
   Invalid_Question,
   Missing_Answer,
   Cannot_Overwrite,
+  One_Choice_Only,
 }
 
 export function getStatusCode(err: QuizError){
@@ -18,6 +19,7 @@ export function getStatusCode(err: QuizError){
     case QuizError.Invalid_Quiz_Id:
     case QuizError.Invalid_Question:
     case QuizError.Missing_Answer:
+    case QuizError.One_Choice_Only:
       return 400;
     case QuizError.Quiz_Not_Found:
     case QuizError.Submission_Not_Found:
@@ -43,6 +45,8 @@ export function getErrorMessage(err: QuizError): string {
       return "One of the questions has a missing answer.";
     case QuizError.Cannot_Overwrite:
       return "Quiz submissions cannot be overwritten.";
+    case QuizError.One_Choice_Only:
+      return "Single choice questions must have one choice selected, and only one choice."
   }
 }
 
