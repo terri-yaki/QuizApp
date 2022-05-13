@@ -17,5 +17,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     let quiz_prom = mQuiz.getQuizById(req.query.id.toString()); //Create a quiz from the ID.
 
-    return handleQuizResponse(quiz_prom, res);
+    return await handleQuizResponse(quiz_prom, res);
 }

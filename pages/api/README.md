@@ -228,7 +228,7 @@ Data Structure (see [QuizSubmission.ts](https://github.com/TheGroup18SoftwarePro
 **409** - Cannot Overwrite. Quiz questions cannot be overwritten.
 
 ### Listing Quiz Submissions
-Gets the submissions for a user. Note that a user can only view their own submission history.
+Gets the submissions for a user. Note that a user can only view their own submission history. Returns false if no submissions could be found.
 
 Path: `/user/listsubmissions?uuid=[uuid]&token=[token]`
 
@@ -246,3 +246,31 @@ Authentication Required: **Yes**
 **200** - Ok. Returns a list of objects using the format of [submitting a quiz](#submitting-a-quiz).
 
 **400** - Bad request. A parameter passed was invalid.
+
+### Quiz Statistics
+Gets the average score, and times completed for a quiz. Note that submissions only count if they are complete.
+
+Path: `/quiz/quizstats?id=[id]`
+
+Method: `GET`
+
+Authentication Required: **No**
+
+### Parameters:
+
+- `id`:`string` - The ID of the quiz.
+
+### Responses:
+
+**200** - Ok. The quiz statistics have been returned. Example:
+```jsonc
+{
+  "averageScore": 1,
+  "quizId": "627ea78238ade46e60d90c1d",
+  "timesCompleted": 2
+}
+```
+
+**400** - Bad Request. It is likely that the Quiz ID is invalid.
+
+**404** - Not Found. The Quiz with the given ID could not be found.

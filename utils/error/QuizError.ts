@@ -38,7 +38,7 @@ export function getErrorMessage(err: QuizError): string {
     case QuizError.Quiz_Not_Found:
       return "This quiz does not exist.";
     case QuizError.Submission_Not_Found:
-      return "A submission with this ID could not be found.";
+      return "The submission(s) could not be found.";
     case QuizError.Invalid_Question:
       return "A question was given that is not in the quiz.";
     case QuizError.Missing_Answer:
@@ -55,6 +55,7 @@ export async function handleQuizResponse<T>(prom: Promise<T | QuizError>, res: N
   try {
       let result = await prom;
       if (typeof result === "number") {
+          console.log(result);
           res.status(getStatusCode(result)).json(new APIError(
               ErrorType.Quiz_Error,
               getErrorMessage(result),
