@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 const axios = require('axios');
 import Cookies from 'universal-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { validatePassword } from "../../utils/user";
 
 interface IFormInput {
     name: string
@@ -19,27 +20,15 @@ function UserSignup() {
     const { register, handleSubmit, formState: { errors } } = useForm<IFormInput>({mode: "onChange"});
     const router = useRouter();
 
-    const passwordValidation = (passwd: string) => {
-        return (
-            typeof passwd === "string" &&
-            passwd.length > 8 && //Lower length bound
-            passwd.length < 64 && //Upper length bound
-            passwd.search(/[a-z]/) >= 0 && //Lowercase letters.
-            passwd.search(/[A-Z]/) >= 0 && //Uppercase letters.
-            passwd.search(/[0-9]/) >= 0 && //Numbers.
-            !/^([a-z]|[A-Z]|[0-9])*$/.test(passwd as string) //Something other than just numbers and letters.
-        )
-    }
-
     const onSubmit: SubmitHandler<IFormInput> =  (data: IFormInput) => {
         console.log(data.name, data.email, data.password, data.confirmPassword);
 
-        if (!data.name || !data.email || !data.password || data.confirmPassword) {
+        if (!data.name || !data.email || !data.password || !data.confirmPassword) {
             setError("Please input into all fields");
             return;
         }
 
-        let isValidPassword = passwordValidation(data.password);
+        let isValidPassword = validatePassword(data.password);
         if (!isValidPassword) {
             setError("Invalid password");
             return;
