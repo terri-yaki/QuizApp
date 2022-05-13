@@ -226,3 +226,23 @@ Data Structure (see [QuizSubmission.ts](https://github.com/TheGroup18SoftwarePro
 **404** - Not found. The quiz ID could not be resolved to quiz.
 
 **409** - Cannot Overwrite. Quiz questions cannot be overwritten.
+
+### Listing Quiz Submissions
+Gets the submissions for a user. Note that a user can only view their own submission history.
+
+Path: `/user/listsubmissions?uuid=[uuid]&token=[token]`
+
+Method: `GET`
+
+Authentication Required: **Yes**
+
+### Parameters:
+
+- `uuid`:`string` - The UUID of the user.
+- `token`:`string` - The user's token.
+
+#### Responses: 
+
+**200** - Ok. Returns a list of objects using the format of [submitting a quiz](#submitting-a-quiz).
+
+**400** - Bad request. A parameter passed was invalid.
