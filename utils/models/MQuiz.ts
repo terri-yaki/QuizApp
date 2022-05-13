@@ -245,5 +245,19 @@ class MQuiz {
         }
     }
 
+    /**
+     * Retrieves submissoins by id. Will not error if the id could not be found.
+     * @param oids Object ids to look for.
+     */
+    public async getSubmissionByObjectIds(oids: mongoose.Types.ObjectId[]): Promise<QuizSubmissionDoc[] | QuizError> { //
+        let docs = await this.subModel.find({
+            "_id": {
+                $in: oids
+            }
+        });
+
+        return docs;
+    }
+
 }
 export default MQuiz;

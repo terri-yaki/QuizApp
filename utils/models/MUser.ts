@@ -5,8 +5,9 @@ import { getUserSchema, UserSession, UserUnsafe, toUser, UserDocument, Session, 
 import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
 import { loadModel } from "../connection";
-import { QuizSubmissionDoc } from "../structs/QuizSubmission";
+import { QuizSubmissionDoc, QuizSubmissionUser } from "../structs/QuizSubmission";
 import { delBasePath } from "next/dist/shared/lib/router/router";
+import MQuiz from "./MQuiz";
 
 //LET ME KNOW IF YOU CHANGE THESE.
 const SALT_ROUNDS = 10;
@@ -223,6 +224,27 @@ class MUser {
       });
 
       await userDoc.save();
+    }
+
+    /**
+     * Get quiz submission object IDs from the user.
+     * @param uuid The user's UUID.
+     * @param token The user's token.
+     */
+    public async getQuizSubmissionIds(uuid: string, token: string): Promise<mongoose.Types.ObjectId[] | UserError> {
+        let user = await this.getUserUnsafe(uuid, token);
+
+        if (typeof user === "number") {
+            return user; //User Error.
+        }
+
+        let subIds:mongoose.Types.ObjectId[] = [];
+
+        user.quizSubmissions.forEach((sub) => {
+            subIds.push(sub.submissionId);
+        });
+
+        return subIds;
     }
 
     
