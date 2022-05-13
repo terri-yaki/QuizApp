@@ -66,6 +66,7 @@ export function getQuizSubmissionSchema(){
     lastUpdate: Date,
     questions: [{
       id: Number,
+      allCorrect: Boolean,
       answers: [{
         id: Number,
         selected: Boolean,
