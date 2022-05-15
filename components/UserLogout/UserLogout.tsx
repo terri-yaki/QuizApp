@@ -11,6 +11,7 @@ const UserLogout = () => {
         cookies.remove('name');
         cookies.remove('email');
         cookies.remove('token');
+        cookies.remove('finishedQuiz');
 
         router.push('/').catch(e => console.log(e));
     }, []);

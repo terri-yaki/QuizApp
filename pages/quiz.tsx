@@ -1,14 +1,15 @@
 import type { NextPage } from 'next';
-import UserAccount from "../components/UserAccount/UserAccount";
+
+import UserQuizSetup from "../components/UserQuizSetup/UserQuizSetup";
 import Sidebar from "../components/Sidebar/Sidebar";
 
-const Account: NextPage = () => {
+const Quiz: NextPage = () => {
     return (
         <div id={'root'}>
             <Sidebar/>
-            <UserAccount/>
+            <UserQuizSetup/>
         </div>
     );
 }
 
-export default Account;
+export default Quiz;
