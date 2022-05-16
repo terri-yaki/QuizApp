@@ -1,0 +1,17 @@
+.twitter-card {
+    border-style: solid;
+    border-width: 2px;
+}
+
+.username {
+    color: #0000EE;
+}
+
+.usernameLink {
+    padding: 4px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+}
