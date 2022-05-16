@@ -165,6 +165,7 @@ const UserQuiz = (props: IProps) => {
 
                 cookies.set('finishedQuiz', true, { path: '/' , expires: expiry});
                 console.log(cookies.get('finishedQuiz'));
+                cookies.set('quizId', res.data.quizId, { path: '/' , expires: expiry});
 
                 setScore(res.data.score);
 

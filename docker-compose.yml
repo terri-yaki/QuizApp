@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: lcross2002/com2027_group_18
     container_name: web
     restart: always
     volumes:

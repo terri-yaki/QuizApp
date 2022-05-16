@@ -31,6 +31,11 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="nav-item m-3 text-center h3">
+                        <Link href="/account">
+                            <a>Account</a>
+                        </Link>
+                    </li>
+                    <li className="nav-item m-3 text-center h3">
                         <Link href="/signup">
                             <a>Signup</a>
                         </Link>
