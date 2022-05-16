@@ -116,10 +116,10 @@ class MUser {
            if (await bcrypt.compare(password, user.passwordHash)){
                return await this.createUserSession(user);
            } else {
-               return UserError.Invalid_Password;
+               return UserError.Incorrect_Password;
            }
        } else {
-           return UserError.Invalid_Password;
+           return UserError.Incorrect_Password;
        } 
     }
     
