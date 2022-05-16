@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { AxiosResponse } from "axios";
 
 let questions: any[];
-let hasQuizStarted: boolean = false;
+
 let userQuestions: any[] = [];
 let quizID: string;
 let isChecked: any[] = [];
@@ -18,6 +18,7 @@ interface IProps {
 const UserQuiz = (props: IProps) => {
     const [num, setNum] = useState(-1);
     const [finished, setFinished] = useState(false);
+    const [hasQuizStarted, setHasQuizStarted] = useState(false);
     const [score, setScore] = useState(0);
 
     useEffect(() => {
@@ -43,7 +44,7 @@ const UserQuiz = (props: IProps) => {
     }, [])
 
     const startQuiz = () => {
-        hasQuizStarted = true;
+        setHasQuizStarted(true);
         setNum(0);
     }
 
