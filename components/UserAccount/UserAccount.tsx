@@ -21,7 +21,7 @@ const UserAccount = () => {
                     <Card.Body className={"row justify-content-center align-items-center"}>
                         <p className={'row justify-content-center'}>Welcome {name}</p>
                         <p className={'row justify-content-center'}>Your email is: {email}</p>
-                        <p className={'row justify-content-center'}>Should you wish to delete your account, email us at "quizapp@quizapp.com" [not yet registered]</p>
+                        <p className={'row justify-content-center'}>Should you wish to delete your account, email us at &quot;quizapp@quizapp.com&quot; [not yet registered]</p>
                     </Card.Body>
                 </Card>
             </div>
