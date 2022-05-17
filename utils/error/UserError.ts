@@ -24,6 +24,7 @@ export function getStatusCode(err: UserError): number {
         case UserError.Invalid_Email:
         case UserError.Invalid_Display_Name:
         case UserError.Invalid_Password:
+        case UserError.Invalid_UUID:
             return 400;
         case UserError.User_Already_Exists:
             return 409;
@@ -47,6 +48,8 @@ export function getErrorMessage(err: UserError): string {
             return "The display name does not meet the requirements.";
         case UserError.Invalid_Password:
             return "The password does not meet the requirements.";
+        case UserError.Invalid_UUID:
+            return "The UUID is invalid."
         case UserError.User_Already_Exists:
             return "A user is already registered with this email address.";
         case UserError.Invalid_Token:
