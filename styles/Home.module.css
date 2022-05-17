@@ -10,6 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-family: "Poppins", sans-serif;
 }
 
 .footer {
@@ -29,7 +30,7 @@
 }
 
 .title a {
-  color: #0070f3;
+  color:#2c3e50
   text-decoration: none;
 }
 
@@ -108,9 +109,24 @@
   margin-left: 0.5rem;
 }
 
+.sidenav {
+  height: 100%;
+  /* 100% Full-height */
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  /* Disable horizontal scroll */
+  padding-top: 60px;
+  transition: 0.5s;
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
     flex-direction: column;
   }
 }
+
+

@@ -3,9 +3,10 @@ import Styles from './UserHome.module.css';
 
 const UserHome = () => {
     return (
+        
         <div id={'container'} className={Styles.container}>
-            <div id={'home'} className={'justify-content-center'}>
-                <h1 className={Styles.title}>QuizApp, your daily revision destination.</h1>
+            <div id={'home'} className={'justify-content-center margin-left:340px;margin-right:40px'}>
+                <h1 className="w3-jumbo text-center">QuizApp, your daily revision destination.</h1>
                 <br/>
 
                 <div className={"justify-content-center text-center"}>
@@ -16,7 +17,7 @@ const UserHome = () => {
 
                     <br/><br/>
 
-                    <div className={'w-20'}>
+                    <div className={'w3-row-padding'}>
                         <p className={''}>Our app is aimed towards people that are at university wanting to have a daily way to help
                             with revision. Revision styles have changed rapidly over the recent few years as studying online and
                             from

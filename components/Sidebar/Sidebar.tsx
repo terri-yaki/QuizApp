@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/w3.css';
 import Styles from './Sidebar.module.css';
 import Link from 'next/link'
 import Cookies from 'universal-cookie';
@@ -14,10 +15,11 @@ const Sidebar = () => {
 
     if (name) {
         return (
-            <div id={'sidebar'} className={Styles.sidebar}>
-                <div className={"text-center"}>
-                    <img src={'quizapp_logo.png'} width="200" height="200" className={"text-center"}></img>
+            <nav id={'navbar'} className={Styles.sidebar}>
+                <div className={"w3-sidebar w3-blue w3-collapse w3-top w3-large w3-padding sidenav"}>
+                    <img src={'res/quizapp_logo_2.png'} width="200" height="200" className={"text-center"}></img>
                 </div>
+
 
                 <ul className="nav flex-column">
                     <li className="nav-item m-3 text-center h3">
@@ -58,18 +60,18 @@ const Sidebar = () => {
                     <p className={Styles.name}>You are currently signed in as:</p>
                     <p className={Styles.name}>{name}</p>
                 </div>
-            </div>
+            </nav>
         )
     }
 
     return (
-        <div id={'sidebar'} className={Styles.sidebar}>
-            <div className={"text-center"}>
-                <img src={'quizapp_logo.png'} width="200" height="200" className={"text-center"}></img>
+        <nav id={'navbar'} className={Styles.sidebar}>
+            <div className={"text-center w3-padding sidenav"}>
+                <img src={'res/quizapp_logo_2.png'} width="200" height="200" className={"text-center"}></img>
             </div>
 
-            <ul className="nav flex-column">
-                <li className="nav-item m-3 text-center h3">
+            <ul className="nav flex-column w3-bar-block">
+                <li className="nav-item m-3 text-center h3 border border-secondary">
                     <Link href="/">
                         <a>Home</a>
                     </Link>
@@ -95,7 +97,7 @@ const Sidebar = () => {
                     </Link>
                 </li>
             </ul>
-        </div>
+        </nav>
     )
 }
 

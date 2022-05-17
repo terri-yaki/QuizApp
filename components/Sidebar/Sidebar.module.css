@@ -1,7 +1,6 @@
 .sidebar {
     height: 100%;
     /* 100% Full-height */
-    width: 15%;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -11,13 +10,13 @@
     /* Disable horizontal scroll */
     padding-top: 60px;
     transition: 0.5s;
-    background-color: #8BC7F9;
+    background-color: #2196F3;
     margin-left: auto;
     margin-right: auto;
 }
 
 .name {
-    color:#2c3e50;
+    color:#ffffff;
     font-size: 36px;
     font-weight: 600;
     text-align: center;

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 const axios = require('axios');
 import Cookies from 'universal-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/w3.css';
 import { validatePassword } from "../../utils/user";
 
 interface IFormInput {
@@ -67,7 +68,7 @@ function UserSignup() {
     };
 
     return(
-        <div id={'signup'} className={'row justify-content-center'}>
+        <div id={'signup'} className={'row justify-content-center w3-panel w3-main'}>
             <Card className={"w-50 row justify-content-center align-items-center"}>
                 <Card.Body>
                     <h2 className={"text-center mb-4"}>Sign Up</h2>
@@ -97,6 +98,7 @@ function UserSignup() {
                             <Form.Control type={"password"} {...register("confirmPassword", {required: "This is required."})}
                                           placeholder={"confirm password"}/>
                         </Form.Group>
+                        <br></br>
 
                         <div className={'row justify-content-center'}>
                             <Button className={"w-50"} type={"submit"}>
