@@ -8,9 +8,9 @@ import Sidebar from "../components/Sidebar/Sidebar";
 const Home: NextPage = () => {
     return (
         <div id={'root'}>
-            <TwitterStream/>
             <Sidebar/>
             <UserHome/>
+            <TwitterStream/>
         </div>
     );
 }
