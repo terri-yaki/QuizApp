@@ -20,7 +20,7 @@ export const addTwitterRules = async () => {
     await client.v2.updateStreamRules({
         add: [
             {value: 'JavaScript', tag: 'js'},
-            {value: 'TypeScript', tag: 'ts'},
+            {value: 'quizapp', tag: 'qa'},
         ],
     });
     console.log('added rules');
