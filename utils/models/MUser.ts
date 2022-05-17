@@ -1,11 +1,13 @@
 import * as mongoose from "mongoose";
 import * as bcrypt from "bcryptjs";
 import * as crypto from "crypto";
-import { getUserSchema, User, UserSession, UserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
+import { getUserSchema, UserSession, UserUnsafe, toUser, UserDocument, Session, SessionDocument } from "../structs/User";
 import { validateDisplayName, validateEmail, validatePassword } from "../user";
 import { UserError } from "../error/UserError";
 import { loadModel } from "../connection";
-import { QuizSubmissionDoc } from "../structs/QuizSubmission";
+import { QuizSubmissionDoc, QuizSubmissionUser } from "../structs/QuizSubmission";
+import { delBasePath } from "next/dist/shared/lib/router/router";
+import MQuiz from "./MQuiz";
 
 //LET ME KNOW IF YOU CHANGE THESE.
 const SALT_ROUNDS = 10;
@@ -26,7 +28,6 @@ class MUser {
      * Attempts to search for the given UUID in the database and return the user.
      * @param uuid The UUID of the user to search for.
      * @returns Either the user if found, or null (in this case you should 404).
-     * TODO: Make a safe version of this function.
      */
     private async getUserDocByUUID(uuid: string): Promise<UserDocument | null> {
         let oid;
@@ -73,9 +74,9 @@ class MUser {
     public async createNewUser(email: string, displayName: string, password: string): Promise<UserSession | UserError> {
         if (!validateEmail(email)) {
             return UserError.Invalid_Email;
-        } else if (!validateDisplayName) {
+        } else if (!validateDisplayName(displayName)) {
             return UserError.Invalid_Display_Name;
-        } else if (!validatePassword) {
+        } else if (!validatePassword(password)) {
             return UserError.Invalid_Password;
         } else if (await this.getUserDocByEmail(email)) {
             return UserError.User_Already_Exists;
@@ -115,10 +116,10 @@ class MUser {
            if (await bcrypt.compare(password, user.passwordHash)){
                return await this.createUserSession(user);
            } else {
-               return UserError.Invalid_Password;
+               return UserError.Incorrect_Password;
            }
        } else {
-           return UserError.Invalid_Password;
+           return UserError.Incorrect_Password;
        } 
     }
     
@@ -144,18 +145,23 @@ class MUser {
     }
 
     /**
-     * Checks if a user's session is valid.
+     * Checks if a user's session is valid. Prunes any expired sessions.
      * @param userDoc The user document to validate.
      * @param token The token to check
-     * @returns 
+     * @returns The session that was found, otherwise null.
      */
-    private validateSession(userDoc: UserDocument, token: string): SessionDocument | null {
+    private async validateSession(userDoc: UserDocument, token: string): Promise<SessionDocument | null> { //Validate sessions (and prune expired ones.)
+        let foundSession: SessionDocument | null = null;
+
         for (let session of userDoc.activeSessions) {
-            if (session.token === token && session.expiry.getTime() > Date.now()) {
-                return session; //Return the session if it is valid.
+            if (session.expiry.getTime() < Date.now()){
+                session.remove();
+            } else if (session.token === token){
+                foundSession = session;
             }
         }
-        return null;
+        await userDoc.save();
+        return foundSession;
     }
 
     /**
@@ -171,7 +177,7 @@ class MUser {
             return UserError.User_Does_Not_Exist;
         }
 
-        let session = this.validateSession(user, token);
+        let session = await this.validateSession(user, token);
 
         if (!session) {
             return UserError.Invalid_Token;
@@ -187,14 +193,13 @@ class MUser {
      * @returns True if successful, otherwise a UserError.
      */
     public async userLogout(uuid: string, token: string): Promise<true | UserError> {
-        //TODO: Prune expired tokens as well.
         if (typeof uuid !== "string") {
             return UserError.Invalid_UUID;
         }
 
         let userDoc = await this.getUserDocByUUID(uuid);
         if (userDoc) {
-            let session = this.validateSession(userDoc, token);
+            let session = await this.validateSession(userDoc, token);
             if (session){
                 session.remove();
                 await userDoc.save();
@@ -219,6 +224,27 @@ class MUser {
       });
 
       await userDoc.save();
+    }
+
+    /**
+     * Get quiz submission object IDs from the user.
+     * @param uuid The user's UUID.
+     * @param token The user's token.
+     */
+    public async getQuizSubmissionIds(uuid: string, token: string): Promise<mongoose.Types.ObjectId[] | UserError> {
+        let user = await this.getUserUnsafe(uuid, token);
+
+        if (typeof user === "number") {
+            return user; //User Error.
+        }
+
+        let subIds:mongoose.Types.ObjectId[] = [];
+
+        user.quizSubmissions.forEach((sub) => {
+            subIds.push(sub.submissionId);
+        });
+
+        return subIds;
     }
 
     

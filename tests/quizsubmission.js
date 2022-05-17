@@ -8,35 +8,40 @@ axios.get("http://127.0.0.1:3000/api/quiz/linux").then((res)=>{
   console.log("Status:", res.status);
   quiz = res.data;
   console.log("QuizId:", quiz.uuid);
-
+  console.log("Quiz", quiz)
   questions = []
   for (q of quiz.questions) {
     answers = []
+    let nextAnswerShouldBe = true;
     for (a of q.answers) {
       answers.push({
         id: a.id,
-        selected: true
+        selected: nextAnswerShouldBe
       });
+      if (nextAnswerShouldBe && !q.multiAnswers){
+        nextAnswerShouldBe = false;
+      }
     }
-    console.log(q)
 
     questions.push({
       id: q.id,
       answers
     });
+    break;
   }
 
   let data = {
     userId: "62740165bd0b9cb918bcd561",
-    token: "YYzmY0i2cRguy/VbVzkpAQZam9gEW1TtedGDZqZr4uA=",
+    token: "7aaQQZYRII0T6By74c8fdCtKm+cqyiXTM0UFRK3lmMJ=",
     quizId: quiz.uuid,
     questions
   }
-
-  console.log("Payload: ", data);
-
+  
+  console.log("Input:", JSON.stringify(data));
   axios.post("http://127.0.0.1:3000/api/quiz/submit", data=data).then(res=>{
-    console.log(JSON.stringify(res.data));
+    console.log("Output:", JSON.stringify(res.data));
+  }).catch((e)=>{
+    console.log("Submission Error:", e.response.data);
   });
 }).catch((e)=>{
   console.log("An error occurred.");

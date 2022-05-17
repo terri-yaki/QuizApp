@@ -5,13 +5,13 @@ export class APIError {
     public subError:number;
     
     constructor(type: ErrorType, message: string, subError?: number){
-        if ((type === ErrorType.User_Error || type === ErrorType.Quiz_Error) && !subError){
+        if ((type === ErrorType.User_Error || type === ErrorType.Quiz_Error) && typeof subError === "undefined"){
             throw "A suberror was required and not provided!";
         }
 
         this.type = type;
         this.message = message;
-        if (subError){
+        if (typeof subError !== "undefined"){
             this.subError = subError;
         } else {
             this.subError = -1;

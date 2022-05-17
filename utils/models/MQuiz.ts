@@ -4,7 +4,7 @@ import {ObjectId} from "bson";
 import {censorQuiz, getQuizSchema, QuizDoc, QuizFull, QuizPartial, QuizQuestion} from "../structs/Quiz";
 import * as quizapi from "../quizapi";
 import {currentDay} from "../general";
-import { getQuizSubmissionSchema, MarkedAnswer, MarkedQuestion, QuizSubmission, QuizSubmissionDoc, QuizSubmissionUnmarkedUser, QuizSubmissionUser } from "../structs/QuizSubmission";
+import { getQuizSubmissionSchema, MarkedAnswer, MarkedQuestion, QuizScoreAverage, QuizSubmission, QuizSubmissionDoc, QuizSubmissionUnmarkedUser, QuizSubmissionUser } from "../structs/QuizSubmission";
 import { loadModel } from "../connection";
 import { QuizError } from "../error/QuizError";
 /**
@@ -148,6 +148,8 @@ class MQuiz {
 
             let markedAs: MarkedAnswer[] = [];
             let allCorrect = true;
+            let numberSelected = 0;
+
             for (let correctAns of correspondingQ.answers) { //Index answers.
                 let subA = subQ.answers.find((ans)=>{
                     return ans.id === correctAns.id;
@@ -158,7 +160,14 @@ class MQuiz {
                 }
 
                 let isCorrect = correctAns.correct === subA.selected;
-                allCorrect = isCorrect;
+                
+                if (!isCorrect) { //Mark it so that not all the questions are correct.
+                    allCorrect = false;
+                }
+
+                if (subA.selected) {
+                    numberSelected++;
+                }
 
                 markedAs.push({
                     id: subA.id,
@@ -169,6 +178,10 @@ class MQuiz {
 
             if (allCorrect) { //Grant score if all the questions are correct.
                 score++;
+            }
+
+            if (!correspondingQ.multiAnswers && numberSelected !== 1) { //Either none or many answers were selected in a question where there is only one right answer.
+                return QuizError.One_Choice_Only;
             }
 
             markedQs.push({
@@ -231,6 +244,60 @@ class MQuiz {
             return doc;
         }
     }
+
+    /**
+     * Retrieves submissoins by id. Will not error if the id could not be found.
+     * @param oids Object ids to look for.
+     */
+    public async getSubmissionByObjectIds(oids: mongoose.Types.ObjectId[]): Promise<QuizSubmissionDoc[] | QuizError> {
+        let docs = await this.subModel.find({
+            "_id": {
+                $in: oids
+            }
+        });
+
+        return docs;
+    }
+
+    /**
+     * Gets the average score for a quiz. Only works on complete submissions.
+     * @param quizId The QuizID to get the score for.
+     * @returns The QuizScore average, or a QuizError. If no submissions are found, then it will return false.
+     */
+    public async getAverageScoreForQuiz(quizId: string): Promise<QuizScoreAverage | false | QuizError> {
+        let quizOid: ObjectId;
+        
+        try {
+            quizOid = mongoose.Types.ObjectId.createFromHexString(quizId); 
+        } catch (e) {
+            return QuizError.Invalid_Quiz_Id;
+        }
+
+        let completeSubmissions = await this.subModel.find({
+            quizId: quizOid,
+            complete: true
+        });
+
+        if (completeSubmissions.length === 0) { //no submissions found.
+            let quiz = await this.quizModel.findById(quizOid); //Check if quiz even exists.
+            if (quiz) {
+                return false; //Quiz exists, there just have not been any submissions for it.
+            } else {
+                return QuizError.Quiz_Not_Found; //Quiz does not exist.
+            }
+        }
+
+        let sumScore = 0;
+        completeSubmissions.forEach(sub=>{
+            sumScore += sub.score;
+        });
+
+        return {
+            averageScore: sumScore/completeSubmissions.length,
+            quizId,
+            timesCompleted: completeSubmissions.length
+        }
+    } 
 
 }
 export default MQuiz;

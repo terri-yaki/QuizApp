@@ -50,6 +50,16 @@
             /* Disable horizontal scroll */
             padding-top: 60px;
             transition: 0.5s;
+
+        .quiz{
+
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
         }
     </style>
 </head>
@@ -96,7 +106,9 @@
             <h1 class="w3-jumbo" style="color:#2c3e50"><b>Your best choice as a computer science student!</b></h1>
         </div>
 
-        <div class="container">
+        <!-- Quiz-->
+        <div class="container quiz"> 
+            <script src="get.ts"></script>
             <div id="question-container" class="hide">
               <div id="question">Question</div>
               <div id="answer-buttons" class="btn-grid">
@@ -132,6 +144,14 @@
             var captionText = document.getElementById("caption");
             captionText.innerHTML = element.alt;
         }
+
+        const axios = require("axios");
+
+// GET Request for a linux quiz
+        axios.get("http://127.0.0.1:3000/api/quiz/linux").then((res) => {
+    // Logs the array of questions
+        console.log(res.data.questions);
+})
     </script>
 
 </body>

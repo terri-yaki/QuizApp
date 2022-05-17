@@ -54,6 +54,13 @@ export interface MarkedAnswer extends UnmarkedAnswer {
   correct: boolean
 }
 
+export interface QuizScoreAverage {
+  quizId: string,
+  timesCompleted: number,
+  averageScore: number,
+  
+}
+
 export function getQuizSubmissionSchema(){
   return new Schema({
     quizId: {
@@ -66,6 +73,7 @@ export function getQuizSubmissionSchema(){
     lastUpdate: Date,
     questions: [{
       id: Number,
+      allCorrect: Boolean,
       answers: [{
         id: Number,
         selected: Boolean,
