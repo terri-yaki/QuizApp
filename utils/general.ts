@@ -44,14 +44,14 @@ export function removePrivates(thing: any) {
  * @param contentType (Optional) The required content-type for the request.
  * @returns If true, continue processing the request. If false, return from the method immediately.
  */
-export function methodGuard<T>(validMethods: string[], req: NextApiRequest, res: NextApiResponse<T | APIError>, contentType?: string): boolean{
-    if (contentType) {
-        if (!req.headers["content-type"] || req.headers["content-type"] !== contentType) {
+export function methodGuard<T>(validMethods: string[], req: NextApiRequest, res: NextApiResponse<T | APIError>, forceJSON: boolean=false): boolean{
+    if (forceJSON) {
+        if (!req.headers["content-type"] || req.headers["content-type"] !== "application/json") {
             res.status(400).json(new APIError(
                 ErrorType.Invalid_Content_Type,
-                `The content type is incorrect. Please use Content-Type: '${contentType}'`
+                `The content type is incorrect. Please use Content-Type: 'application/json'`
             ));
-            return;
+            return false;
         }
     }
     

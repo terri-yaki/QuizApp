@@ -19,7 +19,6 @@ axios.get("http://127.0.0.1:3000/api/quiz/linux").then((res)=>{
         selected: nextAnswerShouldBe
       });
       if (nextAnswerShouldBe && !q.multiAnswers){
-        console.log("submissing false");
         nextAnswerShouldBe = false;
       }
     }
@@ -28,17 +27,19 @@ axios.get("http://127.0.0.1:3000/api/quiz/linux").then((res)=>{
       id: q.id,
       answers
     });
+    break;
   }
 
   let data = {
-    userId: "627148757b2d677dc2ad5bae",
-    token: "+5P3VVOEMm+cPHvpdhba80PFJz9BtFHT9KDmx507TdQ=",
+    userId: "62740165bd0b9cb918bcd561",
+    token: "7aaQQZYRII0T6By74c8fdCtKm+cqyiXTM0UFRK3lmMJ=",
     quizId: quiz.uuid,
     questions
   }
-
+  
+  console.log("Input:", JSON.stringify(data));
   axios.post("http://127.0.0.1:3000/api/quiz/submit", data=data).then(res=>{
-    console.log(JSON.stringify(res.data));
+    console.log("Output:", JSON.stringify(res.data));
   }).catch((e)=>{
     console.log("Submission Error:", e.response.data);
   });
