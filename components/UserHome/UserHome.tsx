@@ -12,7 +12,7 @@ const UserHome = () => {
                 <div className={"justify-content-center text-center"}>
 
                     <div className={"text-center"}>
-                        <img src="about.png" width="1000" />
+                        <img src="about.png" width="width:100%" />
                     </div>
 
                     <br/><br/>
